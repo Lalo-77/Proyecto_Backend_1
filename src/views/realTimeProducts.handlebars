@@ -1,0 +1,36 @@
+    <script src="/socket.io/socket.io.js"></script>  
+    <script src="/js/index.js"></script>  
+    <form id="productoForm">  
+    <input type="text" name="nombre" placeholder="Nombre del producto" required>  
+    <input type="number" name="precio" placeholder="Precio" required>  
+    <button type="submit">Agregar Producto</button>  
+</form>  
+    const socket = io();  
+
+    document.getElementById('productoForm').addEventListener('submit', function(event) {  
+        event.preventDefault();  
+
+        const formData = new FormData(this);  
+        const data = Object.fromEntries(formData);  
+
+        fetch('/productos', {  
+            method: 'POST',  
+            headers: {  
+                'Content-Type': 'application/json'  
+            },  
+            body: JSON.stringify(data)  
+        })  
+        .then(response => response.json())  
+        .then(data => {  
+            console.log('Producto agregado:', data);  
+        })  
+        .catch((error) => {  
+            console.error('Error:', error);  
+        });  
+    });  
+    
+    socket.on('nuevoProducto', (producto) => {  
+        console.log('Nuevo producto recibido:', producto);  
+
+    });  
+</script>

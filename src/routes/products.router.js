@@ -7,24 +7,32 @@ const router = Router();
 const PM = new ProductManager();
 const products = [];
 router.get("/", async (req, res) => {
-  let limit = +req.query.limit;
-  const products = await PM.getProducts(limit);
-  res.render("", {
-    products: products,
-  
-  });
-});
-
-router.get("/:productId", async (req, res) => {
-  let productId = +req.params.productId;
-  let product = await PM.getProductById(productId);
-
-  if (!product) {
-    return res.send({ error: "Producto no encontrado" });
+  let limit = +req.query.limit || null;
+  try {
+    const products = await PM.getProducts(limit);  
+    res.render("products", { products }); 
+  } catch (error) {
+    console.error(error);  
+    res.status(500).send({ status: "error", error: "Error al recuperar productos" });  
   }
-  res.send({ product });
 });
 
+router.get("/", (req, res) => {
+  res.render("home", { products });
+});
+
+router.get("/realtimeproducts", async (req, res) => {
+  res.render("realTimeProducts", { products });
+});
+router.get("/:pid", (req, res) => {
+  const idProduct = +req.params.pid;
+  const product = products.find((product) => product.id === idProduct);
+  if (!product) {
+    res.status(400).send({ status: "error", error: "Producto no encontrado"})
+  } else {
+    res.send(product);
+  }
+})
 router.post("/", async (req, res) => {
   const { title, description, code, price, stock, category } = req.body;
 
@@ -36,12 +44,14 @@ router.post("/", async (req, res) => {
       price: "require",
       status: true,
       stock,
+      category,
     });
+    res.send({ status: "success", message: "producto agregado" });
+
   } catch (error) {
     console.error(error);
     res.status(400).send({ status: "error", error: "ha ocurrido un error" });
   }
-  res.send({ status: "success", message: "producto agregado" });
 });
 
 router.put("/:productId", async (req, res) => {

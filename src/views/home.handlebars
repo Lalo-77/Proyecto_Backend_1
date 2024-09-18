@@ -1,0 +1,23 @@
+<!DOCTYPE html>  
+<html lang="es">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Home</title>  
+    <script src="/socket.io/socket.io.js"></script>  
+    <script src="/js/index.js"></script>  
+</head>  
+<body>  
+    <h1>Lista de Productos</h1>  
+    <h2> Bienvenido, {{usuario}} !!</h2>
+    <ul id="lista-productos">  
+        {{#each productos}}  
+            <li>{{this.nombre}} <button onclick="eliminarProducto({{this.id}})">Eliminar</button></li>  
+        {{/each}}  
+    </ul>  
+    <input type="text" id="nombreProducto" placeholder="Nombre del producto">  
+    <button onclick="agregarProducto()">Agregar Producto</button>  
+</body>  
+</html>
+      <button type="submit">Logout</button>
+</form>
