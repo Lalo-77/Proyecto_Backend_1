@@ -1,29 +1,29 @@
 import { Router } from "express";
-import express from "express";
-import ProductManager from "../managers/ProductsManager.js";
+import ProductManager from "../Dao/controllers/ProductManager.js";
+import __dirname from "../utils.js";
 
 const router = Router();
 
-const PM = new ProductManager();
+const PM = new ProductManager(__dirname+'/Dao/database/products.json');
+
 const products = [];
-router.get("/", async (req, res) => {
+
+router.get("/products", async (req, res) => {
   let limit = +req.query.limit || null;
   try {
     const products = await PM.getProducts(limit);  
-    res.render("products", { products }); 
+    res.json({ products }); 
   } catch (error) {
     console.error(error);  
     res.status(500).send({ status: "error", error: "Error al recuperar productos" });  
   }
+  
+});
+router.get("/products/:pid", async (req, res) => {
+  const productfind = await manager.getProductbyId(req.params);
+  res.json({ status: "success", productfind });
 });
 
-router.get("/", (req, res) => {
-  res.render("home", { products });
-});
-
-router.get("/realtimeproducts", async (req, res) => {
-  res.render("realTimeProducts", { products });
-});
 router.get("/:pid", (req, res) => {
   const idProduct = +req.params.pid;
   const product = products.find((product) => product.id === idProduct);

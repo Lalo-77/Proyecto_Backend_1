@@ -1,23 +1,30 @@
-<!DOCTYPE html>  
-<html lang="es">  
-<head>  
-    <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <title>Home</title>  
-    <script src="/socket.io/socket.io.js"></script>  
-    <script src="/js/index.js"></script>  
-</head>  
-<body>  
-    <h1>Lista de Productos</h1>  
-    <h2> Bienvenido, {{usuario}} !!</h2>
-    <ul id="lista-productos">  
-        {{#each productos}}  
-            <li>{{this.nombre}} <button onclick="eliminarProducto({{this.id}})">Eliminar</button></li>  
-        {{/each}}  
-    </ul>  
-    <input type="text" id="nombreProducto" placeholder="Nombre del producto">  
-    <button onclick="agregarProducto()">Agregar Producto</button>  
-</body>  
-</html>
-      <button type="submit">Logout</button>
-</form>
+<div class="container"></div>
+    <h1 class="">PRODUCTS</h1>
+
+    <div class="">
+        {{#each listadeproductos}}
+        <div class="">
+            <div class="card">
+                <div class="card">
+                    <i class=""></i> Code: {{this.code}}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{this.title}}</h5>
+                    <ul class="list">
+                        <li><i class=""></i> ID: {{this.id}}</li>
+                        <li><i class=""></i> Description: {{this.description}}</li>
+                        <li><i class=""></i> Price: ${{this.price}}</li>
+                        <li><i class=""></i> Category: {{this.category}}</li>
+                        <li><i class=""></i> Status: {{this.status}}</li>
+                        <li><i class=""></i> Stock: {{this.stock}}</li>
+                        <li>
+                            <i class=""></i> Image: <img src={{this.thumbnail}} alt="{{this.title}}"
+                                class="">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>
