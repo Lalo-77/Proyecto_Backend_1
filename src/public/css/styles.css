@@ -25,7 +25,6 @@ header div a {
     padding: 10px;
     margin: 10px;
 }
-
 /** ESTILOS PARA LOS FORMULARIOS: **/
 
 form {
@@ -40,6 +39,7 @@ form {
 form label {
     color: blue;
     font-weight: bold;
+    font-size: 20px;
 }
 
 form input {
@@ -50,7 +50,9 @@ form input {
     border-radius: 4px;
     font-size: 16px;
 }
-
+#formProduct{
+    width: 100%;
+} 
 button {
     background-color:cornflowerblue;
     color: white;
@@ -68,7 +70,7 @@ button:hover {
     background-color:burlywood;
 }
 body {
-    background-color: #f8f9fa; /* Color de fondo general */
+    background-color: white; /* Color de fondo general */
 }
 
 .card {
@@ -77,6 +79,9 @@ body {
     transition: transform 0.3s;
     background: linear-gradient(135deg, #3494e6, #ca4688);  /* Gradient de colores */
     color: black; /* Color del texto principal */
+    width: 1000px;
+    display:grid;
+    flex-direction: row;
 }
 
 .card-header {
@@ -86,4 +91,11 @@ body {
 
 .card:hover {
     transform: scale(1.05);
+}
+.titulo{
+    font-size: 30px;
+}
+.list-products{
+    display:grid;
+    flex-direction:row;
 }

@@ -1,30 +1,42 @@
 import { Router } from "express";
-import ProductManager from "../Dao/controllers/ProductManager.js";
+import ProductsManager from "../controllers/ProductsManager.js";
 import __dirname from "../utils.js";
 
 const router = Router();
 
-const PM = new ProductManager(__dirname+'/Dao/database/products.json');
+const PM = new ProductsManager(__dirname+'/files/products.json');
 
 const products = [];
+router.get('/products', async (req, res) => {  
+  const { limit = 10, page = 1, query = '', sort } = req.query;  
 
-router.get("/products", async (req, res) => {
-  let limit = +req.query.limit || null;
-  try {
-    const products = await PM.getProducts(limit);  
-    res.json({ products }); 
-  } catch (error) {
-    console.error(error);  
-    res.status(500).send({ status: "error", error: "Error al recuperar productos" });  
-  }
-  
-});
-router.get("/products/:pid", async (req, res) => {
-  const productfind = await manager.getProductbyId(req.params);
-  res.json({ status: "success", productfind });
+  const queryOptions = {};  
+  if (query) {  
+      queryOptions.nombre = new RegExp(query, 'i'); // Búsqueda insensible a mayúsculas/minúsculas  
+  }  
+
+  const totalProducts = await products.countDocuments(queryOptions);  
+  const totalPages = Math.ceil(totalProducts / limit);  
+  const products = await products.find(queryOptions)  
+      .sort(sort === 'desc' ? { precio: -1 } : { precio: 1 })  
+      .skip((page - 1) * limit)  
+      .limit(Number(limit));  
+
+  res.json({  
+      status: 'success',  
+      payload: products,  
+      totalPages,  
+      prevPage: page > 1 ? page - 1 : null,  
+      nextPage: page < totalPages ? page + 1 : null,  
+      page: Number(page),  
+      hasPrevPage: page > 1,  
+      hasNextPage: page < totalPages,  
+      prevLink: page > 1 ? `/api/products?page=${page - 1}&limit=${limit}&sort=${sort}&query=${query}` : null,  
+      nextLink: page < totalPages ? `/api/products?page=${page + 1}&limit=${limit}&sort=${sort}&query=${query}` : null,  
+  });  
 });
 
-router.get("/:pid", (req, res) => {
+router.post("/:pid", (req, res) => {
   const idProduct = +req.params.pid;
   const product = products.find((product) => product.id === idProduct);
   if (!product) {
@@ -33,6 +45,12 @@ router.get("/:pid", (req, res) => {
     res.send(product);
   }
 })
+
+router.get("/:pid", async (req, res) => {
+  const productfind = await manager.getProductbyId(req.params);
+  res.json({ status: "success", productfind });
+});
+
 router.post("/", async (req, res) => {
   const { title, description, code, price, stock, category } = req.body;
 

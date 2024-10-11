@@ -1,19 +1,36 @@
 import { Router } from "express";
-import CartManager from "../Dao/controller/ProductManager.js";
+import CartManager from "../controllers/ProductsManager.js";
 
 const router = Router();
 
 const cartManagerInstance = new CartManager("files/carts.json");
 
-router.post("/", async (req, res) => {
+router.post("/api/carts", async (req, res) => {
   try {
-    await cartManagerInstance.addCart();
+    const newCart = await cartManagerInstance.addCart();
+    res.status(201).send({status: "success", maessage: "Carrito creado", cart: newCart});
+
   } catch (error) {
     console.error(error);
-    res.status(400).send({ status: "error", error: "ha ocurrido un error" });
+    res.status(500).send({ status: "error", error: "ha ocurrido un error al crear el carrito" });
   }
+});
 
-  res.send({ status: "success", message: "carrito creado" });
+router.get("/:cid", async (req, res) => {
+  const cartId = +req.params.cid;
+
+  try {  
+    const cart = await cartManagerInstance.getCart(cartId);
+
+    if (!cart) {
+      return res.status(404).send({ status: "error", error: "carrito no encontrado" });
+    }
+
+    res.send({ cart });
+}catch (error) {
+console.error("error");
+res.status(500).send({ status: "error", error: "Error al obtener el carrito"});
+}
 });
 
 router.post("/:cid/product/:pid", async (req, res) => {
@@ -22,22 +39,13 @@ router.post("/:cid/product/:pid", async (req, res) => {
 
   try {
     await cartManagerInstance.addProductToCart(cartId, productId);
+    res.send({ status: "success", message: "Producto agregado al carrito"});
   } catch (error) {
     console.error(error);
-    res.status(400).send({ status: "error", error: "ha ocurrido un error" });
+    res.status(400).send({ status: "error", error: "Ha ocurrido un error al agregar el producto"});
   }
-  res.send({ status: "success", message: "producto agregado al carrito" });
 });
 
-router.get("/:cid", async (req, res) => {
-  const cartId = +req.params.cid;
-  const cart = await cartManagerInstance.getCart(cartId);
-  if (!cart) {
-    return res
-      .status(400)
-      .send({ status: "error", error: "ha ocurrido un error" });
-  }
-  res.send({ cart });
-});
+
 
 export default router;

@@ -1,33 +1,29 @@
-import ProductManager from "../Dao/controllers/ProductManager.js";
+import ProductsManager from "../controllers/ProductsManager.js";
 import __dirname from "../utils.js";
 
-const PM = new ProductManager(__dirname +'/Dao/database/products.json');
+const PM = new ProductsManager(__dirname + "/files/products.json");
 
 const socketProducts = (socketServer) => {
-    // servidor  
-    socketServer.on('connection', async socket => {
-        console.log('nuevo cliente conectado');
-        
-        console.log('cliente conectado con ID:', socket.id)
-        
-        const listadeproductos = await PM.getProducts()
-
-        socketServer.emit("enviodeproductos", listadeproductos)
+    socketServer.on("connection", async(socket) => {
+        console.log("cliente conectado con el Id:", socket.id)
+        const listadeproductos = await PM.getProducts();
+        socket.Server.emit("enviodeproductos", listadeproductos)
 
         socket.on("addProduct", async (obj) => {
-            PM.addProduct(obj)
-            const listadeproductos = await PM.getProducts()
+            await PM.addProduct(obj)
+            const listadeproductos =await PM.getProducts()
             socketServer.emit("enviodeproductos", listadeproductos)
+            console.log(listadeproductos);
+            
         })
 
-        socket.on("deleteProduct", async (id) => {
-
-            PM.deleteProduct(id)
-            const listadeproductos = await PM.getProducts()
-            socketServer.emit("enviodeproductos", listadeproductos)
-        })
-
+       socket.on("deleteProduct", async(id) =>{
+        await PM.deleteProduct(id)
+        const listadeproductos =await PM.getProducts()
+        socketServer.emit("enviodeproductos", listadeproductos)
+       })
+        
     })
-
 };
+
 export default socketProducts;
