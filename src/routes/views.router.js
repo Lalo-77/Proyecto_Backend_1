@@ -1,15 +1,14 @@
 import { Router } from "express";
 import _dirname from "../utils.js";
-import ProductManager from "../controllers/ProductsManager.js";
+import ProductsManager from "../controllers/ProductsManager.js";
 
-const PM = new ProductManager(_dirname +"/files/products.json");  
+const PM = new ProductsManager(_dirname + "/files/products.json");  
 
 const router = Router();
 
 router.get("/", async (req, res) => {
     try {
         const listadeproductos = await PM.getProducts();
-console.log("listadeproductos", listadeproductos);
 
         res.render("home", { listadeproductos });
     } catch (error) {
@@ -31,10 +30,6 @@ router.get("/profile", (req, res)=> {
 })
 
 router.get("/realTimeProducts", (req, res) => {
-    res.render("realTimeProducts");
-})
-
-router.get("/realTimeProducts",  (req, res) => {
     res.render("realTimeProducts");
 })
 

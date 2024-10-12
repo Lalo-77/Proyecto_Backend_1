@@ -5,7 +5,6 @@ import __dirname from "./utils.js";
 import viewsRouter from "./routes/views.router.js"; 
 import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
-import sessionRouter from "./routes/session.router.js";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import cookieParser from "cookie-parser";
@@ -34,14 +33,13 @@ app.use(session({
     resave: true,
     saveUninitialized: true,
     store: MongoStore.create({
-        mongoUrl: "mongodb+srv://crisn3682:coderhouse@cluster0.xqijc.mongodb.net/Login?retryWrites=true&w=majority&appName=Cluster0",
+        mongoUrl: "mongodb+srv://crisn3682:coderhouse@cluster0.xqijc.mongodb.net/shop-cars?retryWrites=true&w=majority&appName=Cluster0",
     }),
 }));
 
 //RUTAS
 
 app.use("/", viewsRouter);
-app.use("/api/session", sessionRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 
@@ -53,8 +51,7 @@ app.use((err, req, res, next) => {
 const httpServer = app.listen(PUERTO, () => {
     try {
         console.log(`Escuchando en el puerto ${PUERTO}`);
-    console.log(`Conectado a  http://localhost:${PUERTO}/api/products`);
-    console.log(`Conectado a  http://localhost:${PUERTO}/api/carts`);
+   
     } catch (error) {
         console.log(error);
     }

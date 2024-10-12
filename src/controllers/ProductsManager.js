@@ -2,13 +2,12 @@ import fs from "fs";
 
 class ProductsManager {  
     constructor(path) {  
-        this.path = path; // Ruta para el almacenamiento de archivos  
+        this.path = path;  
         this.products = [];  
         this.codeId = 0;  
-        this.loadProducts(); // Cargar productos desde el archivo en la inicialización  
+        this.loadProducts(); 
     }  
 
-    // Obtener todos los productos  
     getProducts = async (limit) => {   
         try {  
             let productList = this.products;  
@@ -21,8 +20,7 @@ class ProductsManager {
             console.error("Error al cargar los productos:", error);  
             throw new Error("Error en getProducts: " + error.message);  
         }  
-    };
-     // Cargar productos desde el archivo   
+    }; 
      loadProducts() {  
         if (fs.existsSync(this.path)) {  
             const data = fs.readFileSync(this.path, 'utf-8');  
@@ -30,26 +28,23 @@ class ProductsManager {
                 this.products = JSON.parse(data);  
             } catch (error) {  
                 console.error("Error al parsear JSON:", error);  
-                this.products = []; // Inicializar como vacío si hay un error  
+                this.products = []; 
             }  
             this.codeId = this.products.length > 0 ? Math.max(...this.products.map(p => p.id)) + 1 : 0; // Asigna nuevo ID  
         }  
-    }
-
-    // Agregar un producto  
+    }  
     async addProduct(title, description, stock, thumbnail, category, price, code) {  
-        // Verificación de campos obligatorios  
+        
         if (!title || !description || stock === null || stock === undefined || !thumbnail || !category || price === null || price === undefined || !code) {  
             throw new Error("Todos los campos son obligatorios");  
         }  
-        // Comprobar si ya existe un producto con el mismo código  
+          
         if (this.products.some(product => product.code === code)) {  
             throw new Error("Error: Ya existe un producto con el mismo código");  
         }  
-
-        // Crear el nuevo producto  
+  
         const product = {  
-            id: this.codeId++, // Asume que codeId está definido en alguna parte del objeto  
+            id: this.codeId++, 
             title,  
             description,  
             code,  
@@ -60,10 +55,9 @@ class ProductsManager {
         };  
 
         this.products.push(product);  
-        await this.saveProducts(); // Guardar productos en archivo después de agregarlos  
+        await this.saveProducts(); 
     }  
 
-    // Función para guardar productos en archivo  
     async saveProducts() {  
         try {  
             await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, 2));  
@@ -72,7 +66,6 @@ class ProductsManager {
         }  
     }  
 
-    // Obtener producto por Id  
     getProductById(id) {  
         try {  
             const product = this.products.find(product => product.id === parseInt(id));  
@@ -85,24 +78,20 @@ class ProductsManager {
             console.error(error);  
         }  
     }  
-
-    // Actualizar un producto  
     async updateProduct(id, updatedProduct) {  
         const index = this.products.findIndex(product => product.id === id);  
         if (index === -1) {  
             throw new Error(`El producto con ID ${id} no existe`);  
         }  
         this.products[index] = { ...this.products[index], ...updatedProduct };  
-        await this.saveProducts(); // Guardar productos en archivo después de actualizar  
+        await this.saveProducts(); 
         return this.products[index];  
     }  
-
-    // Eliminar un producto  
     async deleteProduct(id) {  
         const index = this.products.findIndex(product => product.id === id);  
         if (index === -1) throw new Error(`El producto con ID ${id} no existe`);  
         this.products.splice(index, 1);  
-        await this.saveProducts(); // Guardar productos en archivo después de eliminar  
+        await this.saveProducts();
     }  
 }  
 

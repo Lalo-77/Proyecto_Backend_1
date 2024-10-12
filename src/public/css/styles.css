@@ -25,6 +25,14 @@ header div a {
     padding: 10px;
     margin: 10px;
 }
+.row {
+    display: grid;
+    flex-direction: row;
+}
+.col{
+    display: flex;
+    width: 2000px;
+}
 /** ESTILOS PARA LOS FORMULARIOS: **/
 
 form {

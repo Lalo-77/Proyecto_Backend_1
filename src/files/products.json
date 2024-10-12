@@ -8,7 +8,7 @@
     "status": "true",
     "stock": 30,
     "category": "decoracion",
-    "thumbnail": "../../public/img/Luces Leds.jpg"
+    "thumbnail": "/public/img/LucesLeds.jpg"
   },
   {
     "id": "2",
@@ -19,7 +19,7 @@
     "status": "true",
     "stock": 30,
     "category": "decoracion",
-    "thumbnail": "../..public/img/moldura para interior.webp"
+    "thumbnail": "/public/img/molduraparainterior.webp"
   },
   {
     "id": "3",
@@ -30,7 +30,7 @@
     "status": "true",
     "stock": 30,
     "category": "decoracion",
-    "thumbnail": "../../public/img/juego de alfombra.webp"
+    "thumbnail": "/public/img/juegodealfombra.webp"
   },
   {
     "id": "4",
@@ -41,7 +41,7 @@
     "status": "true",
     "stock": 30,
     "category": "decoracion",
-    "thumbnail": "../../public/img/Luces Leds.jpg"
+    "thumbnail": "/public/img/LucesLeds.jpg"
   },
   {
     "id": "5",
@@ -52,7 +52,7 @@
     "status": "true",
     "stock": 30,
     "category": "proteccion",
-    "thumbnail": "../../public/img/cubre zocalo.webp"
+    "thumbnail": "/public/img/cubrezocalo.webp"
   },
   {
     "id": "6",
@@ -63,7 +63,7 @@
     "status": "true",
     "stock": 30,
     "category": "proteccion",
-    "thumbnail": "../../public/img/inflador portaril.jpg"
+    "thumbnail": "/public/img/infladorportaril.jpg"
   },
   {
     "id": "7",
@@ -74,7 +74,7 @@
     "status": "true",
     "stock": 30,
     "category": "decoracion",
-    "thumbnail": "../../public/img/tazas decorativas.webp"
+    "thumbnail": "/public/img/tazasdecorativas.webp"
   },
   {
     "id": "8",
@@ -85,7 +85,7 @@
     "status": "true",
     "stock": 30,
     "category": "limpieza",
-    "thumbnail": "../../public/img/cepillo con mango.webp"
+    "thumbnail": "/public/img/cepilloconmango.webp"
   },
   {
     "id": "9",
@@ -96,7 +96,7 @@
     "status": "true",
     "stock": 30,
     "category": "limpieza",
-    "thumbnail": "../../public/img/manopla lavado.webp"
+    "thumbnail": "/public/img/manoplalavado.webp"
   },
   {
     "id": "10",
@@ -107,6 +107,6 @@
     "status": "true",
     "stock": 30,
     "category": "accesorios",
-    "thumbnail": "../../public/img/gancho remolque.jpg"
+    "thumbnail": "/public/img/ganchoremolque.jpg"
   }
 ]

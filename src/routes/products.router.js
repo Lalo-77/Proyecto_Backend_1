@@ -4,7 +4,7 @@ import __dirname from "../utils.js";
 
 const router = Router();
 
-const PM = new ProductsManager(__dirname+'/files/products.json');
+const PM = new ProductsManager(__dirname + '/files/products.json');
 
 const products = [];
 router.get('/products', async (req, res) => {  
