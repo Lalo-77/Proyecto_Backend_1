@@ -8,19 +8,6 @@ class ProductsManager {
         this.loadProducts(); 
     }  
 
-    getProducts = async (limit) => {   
-        try {  
-            let productList = this.products;  
-    
-            if (limit) {  
-                productList = productList.slice(0, parseInt(limit));  
-            }  
-            return productList;  
-        } catch (error) {  
-            console.error("Error al cargar los productos:", error);  
-            throw new Error("Error en getProducts: " + error.message);  
-        }  
-    }; 
      loadProducts() {  
         if (fs.existsSync(this.path)) {  
             const data = fs.readFileSync(this.path, 'utf-8');  
@@ -33,66 +20,147 @@ class ProductsManager {
             this.codeId = this.products.length > 0 ? Math.max(...this.products.map(p => p.id)) + 1 : 0; // Asigna nuevo ID  
         }  
     }  
-    async addProduct(title, description, stock, thumbnail, category, price, code) {  
-        
-        if (!title || !description || stock === null || stock === undefined || !thumbnail || !category || price === null || price === undefined || !code) {  
-            throw new Error("Todos los campos son obligatorios");  
-        }  
-          
-        if (this.products.some(product => product.code === code)) {  
-            throw new Error("Error: Ya existe un producto con el mismo código");  
-        }  
-  
-        const product = {  
-            id: this.codeId++, 
-            title,  
-            description,  
-            code,  
-            price,  
-            stock,  
-            category,  
-            thumbnail,  
-        };  
-
-        this.products.push(product);  
-        await this.saveProducts(); 
-    }  
-
-    async saveProducts() {  
+    getProducts = async (info = {}) => {  
         try {  
-            await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, 2));  
-        } catch (error) {  
-            throw new Error('Error al guardar los productos en el archivo');  
-        }  
-    }  
-
-    getProductById(id) {  
-        try {  
-            const product = this.products.find(product => product.id === parseInt(id));  
-            if (product) {  
-                return product;  
+            const { limit } = info; 
+            if (fs.existsSync(this.path)) {  
+                const productlist = await fs.promises.readFile(this.path, "utf-8");  
+                const productlistJs = JSON.parse(productlist);  
+                
+                if (limit) {  
+                    const limitProducts = productlistJs.slice(0, parseInt(limit));  
+                    return limitProducts;  
+                } else {  
+                    return productlistJs;  
+                }  
             } else {  
-                throw new Error("Producto no encontrado");  
+                return [];  
             }  
         } catch (error) {  
-            console.error(error);  
+            throw new Error(error);  
         }  
-    }  
-    async updateProduct(id, updatedProduct) {  
-        const index = this.products.findIndex(product => product.id === id);  
-        if (index === -1) {  
-            throw new Error(`El producto con ID ${id} no existe`);  
-        }  
-        this.products[index] = { ...this.products[index], ...updatedProduct };  
-        await this.saveProducts(); 
-        return this.products[index];  
-    }  
-    async deleteProduct(id) {  
-        const index = this.products.findIndex(product => product.id === id);  
-        if (index === -1) throw new Error(`El producto con ID ${id} no existe`);  
-        this.products.splice(index, 1);  
-        await this.saveProducts();
-    }  
+    };
+      getProductbyId = async (id) => {
+        try {
+          const {pid}=id
+          if (fs.existsSync(this.path)) {
+            const allproducts = await this.getProducts({});
+            const found = allproducts.find((element) => element.id === parseInt(pid));
+            if (found) {
+              return found;
+            } else {
+              throw new Error("Producto no existe");
+            }
+          } else {
+            throw new Error("Product file not found");
+          }
+        } catch (error) {
+          throw new Error(error);
+        }
+      };
+    
+      //GENERATE ID
+      generateId = async () => {
+        try {
+          if (fs.existsSync(this.path)) {
+            const productlist = await fs.promises.readFile(this.path, "utf-8");
+            const productlistJs = JSON.parse(productlist);
+            const counter = productlistJs.length;
+            if (counter == 0) {
+              return 1;
+            } else {
+              return productlistJs[counter - 1].id + 1;
+            }
+          }
+        } catch (error) {
+          throw new Error(error);
+        }
+      };
+    
+      //CREATE
+      addProduct = async (obj) => {
+        const {title, description, price, thumbnail,category, code, stock}=obj
+        if (!title || !description || !price || !category || !code || !stock) {
+          console.error("INGRESE TODOS LOS DATOS DEL PRODUCTO");
+          return;
+        } else {
+          const listadoProductos=await this.getProducts({})
+          const codigorepetido = listadoProductos.find(
+            (elemento) => elemento.code === code
+          );
+          if (codigorepetido) {
+            console.error("EL CODIGO DEL PRODUCTO QUE DESEA AGREGAR ES REPETIDO");
+            return;
+          } else {
+            const id = await this.generateId();
+            const productnew = {
+              id,
+              title,
+              description,
+              price,
+              category,
+              thumbnail,
+              code,
+              stock,
+            };
+            listadoProductos.push(productnew);
+            await fs.promises.writeFile(this.path,
+              JSON.stringify(listadoProductos, null, 2)
+            );
+          }
+        }
+      };
+    
+      //UPDATE
+      updateProduct = async (id,obj) => {
+        const {pid}=id
+        const {title, description, price, category,thumbnail, status,code, stock}=obj
+             if(title===undefined || description===undefined || price===undefined || category===undefined || status===undefined || code===undefined||stock===undefined){
+          console.error("INGRESE TODOS LOS DATOS DEL PRODUCTO PARA SU ACTUALIZACION");
+          return;
+        } else {
+          const listadoProductos = await this.getProducts({});
+          const codigorepetido = listadoProductos.find( (i) => i.code === code);
+          if (codigorepetido) {
+            console.error(
+              "EL CODIGO DEL PRODUCTO QUE DESEA ACTUALIZAR ES REPETIDO"
+            );
+            return;
+          } else {
+            const listadoProductos = await this.getProducts({});
+            const newProductsList = listadoProductos.map((elemento) => {
+              if (elemento.id === parseInt(pid)) {
+                        const updatedProduct = {
+                          ...elemento,
+                          title,
+                          description,
+                          price,
+                          category,
+                          status,
+                          thumbnail,
+                          code,
+                          stock
+                        };
+                return updatedProduct;
+              } else {
+                return elemento;
+              }
+            });
+            await fs.promises.writeFile(this.path,JSON.stringify(newProductsList, null, 2));
+          }
+        }
+      };
+      //DELETE
+      deleteProduct = async (id) => {
+        const allproducts = await this.getProducts({});
+        const productswithoutfound = allproducts.filter(
+     (elemento) => elemento.id !==  parseInt(id)
+        );
+        await fs.promises.writeFile(this.path,JSON.stringify(productswithoutfound, null, 2)
+        );
+          return "Producto Eliminado"
+    
+      };
 }  
 
 export default ProductsManager;

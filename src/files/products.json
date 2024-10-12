@@ -108,5 +108,15 @@
     "stock": 30,
     "category": "accesorios",
     "thumbnail": "/public/img/ganchoremolque.jpg"
+  },
+  {
+    "id": "101",
+    "title": "rueda",
+    "description": "una",
+    "price": "456788",
+    "category": "acceosiros",
+    "thumbnail": "file:////imagen%20rueda%20-%20Buscar%20con%20Google.html",
+    "code": "SDE123",
+    "stock": "30"
   }
 ]

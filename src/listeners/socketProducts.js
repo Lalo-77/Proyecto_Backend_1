@@ -24,7 +24,6 @@ const socketProducts = (socketServer) => {
                 console.error("Error al agregar producto:", error);  
             }  
         });  
-
         socket.on("deleteProduct", async (id) => {  
             try {  
                 await PM.deleteProduct(id);  
