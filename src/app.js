@@ -13,6 +13,7 @@ import path from "path";
 
 const app = express();
 const PUERTO = 8080;
+const HOST = "localhost";
 
 app.use(express.static(__dirname + "/public"));
 
@@ -50,7 +51,7 @@ app.use((err, req, res, next) => {
 });
 const httpServer = app.listen(PUERTO, () => {
     try {
-        console.log(`Escuchando en el puerto ${PUERTO}`);
+        console.log(`Escuchando en el puerto http://${HOST}:${PUERTO}`);
    
     } catch (error) {
         console.log(error);

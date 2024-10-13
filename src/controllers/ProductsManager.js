@@ -79,43 +79,45 @@ class ProductsManager {
     
       //CREATE
       addProduct = async (obj) => {
-        const {title, description, price, thumbnail,category, code, stock}=obj
-        if (!title || !description || !price || !category || !code || !stock) {
-          console.error("INGRESE TODOS LOS DATOS DEL PRODUCTO");
+      const {title, description, price, thumbnail, category, code, stock} = obj;
+
+      if (!title || !description || !price || !category || !code || !stock) {
+        console.error("INGRESE TODOS LOS DATOS DEL PRODUCTO");
+        return;
+      } else {
+        const listadoProductos=await this.getProducts({})
+
+        console.log("Producto a agregar:", { title, description, price, thumbnail, category, code, stock });  
+        console.log("Listado actual de productos:", listadoProductos);
+        
+        const codigorepetido = listadoProductos.find((elemento) => elemento.code === code
+        );
+        if (codigorepetido) {
+          console.error("EL CODIGO DEL PRODUCTO QUE DESEA AGREGAR ES REPETIDO");
           return;
         } else {
-          const listadoProductos=await this.getProducts({})
-          const codigorepetido = listadoProductos.find(
-            (elemento) => elemento.code === code
-          );
-          if (codigorepetido) {
-            console.error("EL CODIGO DEL PRODUCTO QUE DESEA AGREGAR ES REPETIDO");
-            return;
-          } else {
-            const id = await this.generateId();
-            const productnew = {
-              id,
-              title,
-              description,
-              price,
-              category,
-              thumbnail,
-              code,
-              stock,
-            };
-            listadoProductos.push(productnew);
-            await fs.promises.writeFile(this.path,
-              JSON.stringify(listadoProductos, null, 2)
-            );
-          }
+          const id = await this.generateId();
+          const productnew = {
+            id: id,
+            title: title,
+            description: description,
+            price: price,
+            category: category,
+            thumbnail: thumbnail,
+            code: code,
+            stock: stock,
+          };
+          listadoProductos.push(productnew);
+          await fs.promises.writeFile(this.path, JSON.stringify(listadoProductos, null, 2));
         }
-      };
+      }
+    };
     
       //UPDATE
       updateProduct = async (id,obj) => {
         const {pid}=id
-        const {title, description, price, category,thumbnail, status,code, stock}=obj
-             if(title===undefined || description===undefined || price===undefined || category===undefined || status===undefined || code===undefined||stock===undefined){
+        const {title, description, price, category,thumbnail,code, stock}=obj
+             if(title===undefined || description===undefined || price===undefined || category===undefined || code===undefined||stock===undefined){
           console.error("INGRESE TODOS LOS DATOS DEL PRODUCTO PARA SU ACTUALIZACION");
           return;
         } else {
@@ -136,7 +138,6 @@ class ProductsManager {
                           description,
                           price,
                           category,
-                          status,
                           thumbnail,
                           code,
                           stock
@@ -151,16 +152,22 @@ class ProductsManager {
         }
       };
       //DELETE
-      deleteProduct = async (id) => {
-        const allproducts = await this.getProducts({});
-        const productswithoutfound = allproducts.filter(
-     (elemento) => elemento.id !==  parseInt(id)
-        );
-        await fs.promises.writeFile(this.path,JSON.stringify(productswithoutfound, null, 2)
-        );
-          return "Producto Eliminado"
+      deleteProduct = async (id) => {  
+        try {  
+            const allproducts = await this.getProducts({});  
+            console.log("Todos los productos:", allproducts); // Muestra la lista de productos por consola  
     
-      };
+            const productswithoutfound = allproducts.filter(  
+                (elemento) => elemento.id !== parseInt(id)  
+            );  
+    
+            await fs.promises.writeFile(this.path, JSON.stringify(productswithoutfound, null, 2));  
+            return "Producto Eliminado";  
+        } catch (error) {  
+            console.error("Error al eliminar el producto:", error);  
+            return "Error al eliminar el producto";  
+        }  
+    };
 }  
 
 export default ProductsManager;

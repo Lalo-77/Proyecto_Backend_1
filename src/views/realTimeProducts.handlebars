@@ -1,7 +1,7 @@
 <form class="" id="formProduct">
     <h2 class="titulo">Real Time Products</h2>
     <div>
-        <!-- Nombre del Producto -->
+
         <div class="">
             <label for="title" class="form-label">Nombre del Producto</label>
             <div class="input-group">
@@ -10,7 +10,6 @@
             </div>
         </div>
 
-        <!-- Descripción -->
         <div class="">
             <label for="description" class="form-label">Descripción</label>
             <div class="input-group">
@@ -20,7 +19,6 @@
             </div>
         </div>
 
-        <!-- Stock -->
         <div class="">
             <label for="stock" class="form-label">Stock</label>
             <div class="input-group">
@@ -29,17 +27,6 @@
             </div>
         </div>
 
-        <!-- Imagen (URL) -->
-        <div class="">
-            <label for="thumbnail" class="form-label">Imagen (URL)</label>
-            <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-image"></i></span>
-                <input class="form-control" type="text" name="thumbnail" id="thumbnail"
-                    placeholder="Ej. https://example.com/image.jpg" required>
-            </div>
-        </div>
-
-        <!-- Categoría -->
         <div class="">
             <label for="category" class="form-label">Categoría</label>
             <div class="input-group">
@@ -49,7 +36,6 @@
             </div>
         </div>
 
-        <!-- Precio -->
         <div class="">
             <label for="price" class="form-label">Precio</label>
             <div class="input-group">
@@ -57,8 +43,7 @@
                 <input class="form-control" type="number" name="price" id="price" placeholder="Ej. 499.99" required>
             </div>
         </div>
-
-        <!-- Código -->
+        
         <div class="">
             <label for="code" class="form-label">Código</label>
             <div class="input-group">
@@ -66,7 +51,16 @@
                 <input class="form-control" type="text" name="code" id="code" placeholder="Ej. ABC123" required>
             </div>
         </div>
-        <!-- Botón Registrar -->
+
+        <div class="">
+            <label for="thumbnail" class="form-label">Imagen (URL)</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-image"></i></span>
+                <input class="form-control" type="text" name="thumbnail" id="thumbnail"
+                    placeholder="Ej. https://example.com/image.jpg" required>
+            </div>
+        </div>
+   
         <div class="">
             <button class="btn btn-primary" type="submit" id="add-btn">Registrar </button>
         </div>
@@ -75,7 +69,6 @@
     <div>
         <h2 class="mt-4">Eliminar Producto:</h2>
 
-        <!-- ID del Producto a Eliminar -->
         <div class="">
             <label for="id-prod" class="form-label">ID del Producto</label>
             <div class="input-group">
@@ -84,7 +77,6 @@
             </div>
         </div>
 
-        <!-- Botón Eliminar -->
         <div class="">
             <button class="btn btn-danger" type="button" id="delete-btn">Eliminar</button>
         </div>

@@ -8,7 +8,7 @@
     "status": "true",
     "stock": 30,
     "category": "decoracion",
-    "thumbnail": "/public/img/LucesLeds.jpg"
+    "thumbnail": "https://i.postimg.cc/bGMxvV6Q/kit-accesorios-auto.webp' alt='kit-accesorios-auto"
   },
   {
     "id": "2",
@@ -19,7 +19,7 @@
     "status": "true",
     "stock": 30,
     "category": "decoracion",
-    "thumbnail": "/public/img/molduraparainterior.webp"
+    "thumbnail": "https://i.postimg.cc/LhV3HBSF/moldura-para-interior.webp alt='moldura-para-interior'"
   },
   {
     "id": "3",
@@ -30,7 +30,7 @@
     "status": "true",
     "stock": 30,
     "category": "decoracion",
-    "thumbnail": "/public/img/juegodealfombra.webp"
+    "thumbnail": "https://i.postimg.cc/JyJjSjxg/juego-de-alfombra.webp alt=juego-de-alfombra"
   },
   {
     "id": "4",
@@ -41,7 +41,7 @@
     "status": "true",
     "stock": 30,
     "category": "decoracion",
-    "thumbnail": "/public/img/LucesLeds.jpg"
+    "thumbnail": "https://i.postimg.cc/SjVc0SLy/Luces-Leds.jpg border='0' alt='Luces-Leds"
   },
   {
     "id": "5",
@@ -52,7 +52,7 @@
     "status": "true",
     "stock": 30,
     "category": "proteccion",
-    "thumbnail": "/public/img/cubrezocalo.webp"
+    "thumbnail": "https://i.postimg.cc/DWqbxny3/cubre-zocalo.webp border='0' alt='cubre-zocalo"
   },
   {
     "id": "6",
@@ -63,7 +63,7 @@
     "status": "true",
     "stock": 30,
     "category": "proteccion",
-    "thumbnail": "/public/img/infladorportaril.jpg"
+    "thumbnail": "https://i.postimg.cc/QV6K46sC/inflador-portaril.jpg alt=inflador-portaril"
   },
   {
     "id": "7",
@@ -74,7 +74,7 @@
     "status": "true",
     "stock": 30,
     "category": "decoracion",
-    "thumbnail": "/public/img/tazasdecorativas.webp"
+    "thumbnail": "https://i.postimg.cc/YGrj8FsQ/tazas-decorativas.webp' alt='tazas-decorativas"
   },
   {
     "id": "8",
@@ -85,7 +85,7 @@
     "status": "true",
     "stock": 30,
     "category": "limpieza",
-    "thumbnail": "/public/img/cepilloconmango.webp"
+    "thumbnail": "https://i.postimg.cc/vgz2F7BX/cepillo-con-mango.webp alt=cepillo-con-mango"
   },
   {
     "id": "9",
@@ -96,7 +96,7 @@
     "status": "true",
     "stock": 30,
     "category": "limpieza",
-    "thumbnail": "/public/img/manoplalavado.webp"
+    "thumbnail": "https://i.postimg.cc/xkgL96vk/manopla-lavado.webp alt= manopla-lavado"
   },
   {
     "id": "10",
@@ -107,16 +107,48 @@
     "status": "true",
     "stock": 30,
     "category": "accesorios",
-    "thumbnail": "/public/img/ganchoremolque.jpg"
+    "thumbnail": "https://i.postimg.cc/WdnfYV5X/gancho-remolque.jpg alt=gancho-remolque"
   },
   {
     "id": "101",
     "title": "rueda",
     "description": "una",
     "price": "456788",
-    "category": "acceosiros",
-    "thumbnail": "file:////imagen%20rueda%20-%20Buscar%20con%20Google.html",
+    "status": "true",
+    "category": "accesorios",
+    "thumbnail": "",
     "code": "SDE123",
     "stock": "30"
+  },
+  {
+    "id": "1011",
+    "title": "llanta aleacion",
+    "description": "llanta de acero fundido ",
+    "price": "450000",
+    "status": "true",
+    "category": "respuestos",
+    "thumbnail": "",
+    "code": "12",
+    "stock": "20"
+  },
+  {
+    "id": "id",
+    "title": "title",
+    "description": "description",
+    "price": "price",
+    "category": "category",
+    "thumbnail": "thumbnail",
+    "code": "code",
+    "stock": "stock"
+  },
+  {
+    "id": "id11",
+    "title": "opticas",
+    "description": "opticas para autos ",
+    "price": "6040403",
+    "category": "accesorios",
+    "thumbnail": "opticas.jpg",
+    "code": "45",
+    "stock": "46"
   }
 ]

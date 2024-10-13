@@ -36,16 +36,6 @@ router.get('/products', async (req, res) => {
   });  
 });
 
-router.post("/:pid", (req, res) => {
-  const idProduct = +req.params.pid;
-  const product = products.find((product) => product.id === idProduct);
-  if (!product) {
-    res.status(400).send({ status: "error", error: "Producto no encontrado"})
-  } else {
-    res.send(product);
-  }
-})
-
 router.get("/:pid", async (req, res) => {
   const productfind = await manager.getProductbyId(req.params);
   res.json({ status: "success", productfind });
@@ -86,17 +76,19 @@ router.put("/:productId", async (req, res) => {
   res.send({ status: "success", message: "producto editado" });
 });
 
-router.delete("/:productId", async (req, res) => {
-  const productId = +req.params.productId;
+router.delete("/:productId", async (req, res) => {  
+  const productId = +req.params.productId;  
 
-  try {
-    await PM.deleteProduct(productId);
-  } catch (error) {
-    console.error(error);
-    res.status(400).send({ status: "error", error: "ha ocurrido un error" });
-  }
-
-  res.send({ status: "success", message: "producto eliminado" + productId });
+  try {  
+      const result = await PM.deleteProduct(productId);  
+ 
+      if (!result) {  
+          return res.status(404).send({ status: "error", error: "Producto no encontrado" });  
+      }  
+      res.send({ status: "success", message: "Producto eliminado", productId });  
+  } catch (error) {  
+      console.error(error);  
+      res.status(500).send({ status: "error", error: "Ha ocurrido un error al eliminar el producto" });  
+  }  
 });
-
 export default router;

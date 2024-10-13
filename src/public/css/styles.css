@@ -73,28 +73,26 @@ button {
     margin-top: 10px;
 }
 
-
 button:hover {
     background-color:burlywood;
 }
 body {
-    background-color: white; /* Color de fondo general */
+    background-color: white; 
 }
 
 .card {
     border: none;
     border-radius: 15px;
     transition: transform 0.3s;
-    background: linear-gradient(135deg, #3494e6, #ca4688);  /* Gradient de colores */
-    color: black; /* Color del texto principal */
+    background: linear-gradient(135deg, #3494e6, #ca4688);  
     width: 1000px;
     display:grid;
     flex-direction: row;
 }
 
 .card-header {
-    background-color: #007bff; /* Color de fondo del encabezado */
-    color: #fff; /* Color del texto del encabezado */
+    background-color: #007bff;
+    color: #fff; 
 }
 
 .card:hover {
@@ -106,4 +104,7 @@ body {
 .list-products{
     display:grid;
     flex-direction:row;
+}
+.card.title{
+    font-size: 50px;
 }

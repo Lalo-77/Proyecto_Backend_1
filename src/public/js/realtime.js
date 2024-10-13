@@ -1,8 +1,11 @@
 const socket = io(); 
 
 //cliente
+let enviodeproductos = [];  
 
-let enviodeproductos = [];   
+socket.on("enviodeproductos", (obj) => {
+  updateProductList(obj);
+})
 
 socket.on("enviodeproductos", (obj) => {  
   enviodeproductos = obj; 
@@ -14,10 +17,10 @@ socket.on("addProduct", async (productData) => {
           productData.title,  
           productData.description,  
           productData.stock,  
-          productData.thumbnail,  
           productData.category,  
           productData.price,  
-          productData.code  
+          productData.code,
+          productData.thumbnail,  
       );  
   } catch (error) {  
       console.error(`Error al agregar producto: ${error.message}`);  
@@ -31,20 +34,20 @@ function updateProductList(productList) {
     productosHTML += `<div class="card">  
         <div class="card-header"> code: ${product.code}</div>  
         <div class="card-body">  
-            <h4 class="card-title">${product.title}</h4>  
+            <h4>${product.title}</h4>  
             <p class="card-text">  
-            <ul class="card-text">  
+            <ul>  
             <li>title: ${product.title}</li>  
             <li>description: ${product.description}</li>  
             <li>stock: ${product.stock}</li>  
-            <li>thumbnail: <img src="${product.thumbnail}"></li>  
             <li>category: ${product.category}</li>  
             <li>price: ${product.price}</li>
-            <li>code: ${product.code}</li>  
+            <li>code: ${product.code}</li>
+            <li>thumbnail: <img src="${product.thumbnail}"></li>  
             </ul>  
             </p>  
             </div>  
-            <div class="">  
+            <div>  
             <button type="button" class="btn btn-danger delete-btn" onclick="deleteProduct(${product.id})">Eliminar</button>  
             </div>  
         </div>  
@@ -60,20 +63,20 @@ form.addEventListener("submit", (evt) => {
 
   let title = form.elements.title.value;  
   let description = form.elements.description.value;  
-  let stock = form.elements.stock.value;  
-  let thumbnail = form.elements.thumbnail.value;  
+  let stock = form.elements.stock.value;
   let category = form.elements.category.value;  
   let price = form.elements.price.value;  
-  let code = form.elements.code.value;  
+  let code = form.elements.code.value;
+  let thumbnail = form.elements.thumbnail.value;  
 
   socket.emit("addProduct", {  
     title,  
     description,  
     stock,  
-    thumbnail,  
     category,  
     price,  
-    code,     
+    code,
+    thumbnail,  
   });  
 
   form.reset();  

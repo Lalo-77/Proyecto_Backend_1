@@ -13,8 +13,8 @@ const socketProducts = (socketServer) => {
         } catch (error) {  
             console.error("Error al obtener productos:", error);  
         }  
-
-        socket.on("addProduct", async (obj) => {  
+        
+            socket.on("addProduct", async (obj) => {  
             try {  
                 await PM.addProduct(obj);  
                 const updatedList = await PM.getProducts();  
@@ -23,7 +23,7 @@ const socketProducts = (socketServer) => {
             } catch (error) {  
                 console.error("Error al agregar producto:", error);  
             }  
-        });  
+        }); 
         socket.on("deleteProduct", async (id) => {  
             try {  
                 await PM.deleteProduct(id);  
