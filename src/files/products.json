@@ -150,5 +150,14 @@
     "thumbnail": "opticas.jpg",
     "code": "45",
     "stock": "46"
+  },
+  {
+    "title": "alternador",
+    "description": "alternador para auto de 12 volts",
+    "price": "54380",
+    "category": "repuestos",
+    "thumbnail": "alter.jpg",
+    "code": "543",
+    "stock": "30"
   }
 ]

@@ -33,6 +33,10 @@ header div a {
     display: flex;
     width: 2000px;
 }
+#list-products{
+    margin-left: 40px;
+}
+
 /** ESTILOS PARA LOS FORMULARIOS: **/
 
 form {
@@ -107,4 +111,7 @@ body {
 }
 .card.title{
     font-size: 50px;
+}
+.row{
+    margin-left: 20px;
 }

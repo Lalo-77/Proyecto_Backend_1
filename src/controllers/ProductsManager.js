@@ -98,7 +98,6 @@ class ProductsManager {
         } else {
           const id = await this.generateId();
           const productnew = {
-            id: id,
             title: title,
             description: description,
             price: price,

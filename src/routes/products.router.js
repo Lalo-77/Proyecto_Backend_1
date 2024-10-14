@@ -1,39 +1,44 @@
 import { Router } from "express";
 import ProductsManager from "../controllers/ProductsManager.js";
 import __dirname from "../utils.js";
+import productModel  from "../models/product.model.js";
 
 const router = Router();
 
 const PM = new ProductsManager(__dirname + '/files/products.json');
 
-const products = [];
 router.get('/products', async (req, res) => {  
-  const { limit = 10, page = 1, query = '', sort } = req.query;  
+  const { limit = 5, page = 1, query = '', sort } = req.query;  
 
   const queryOptions = {};  
   if (query) {  
-      queryOptions.nombre = new RegExp(query, 'i'); // Búsqueda insensible a mayúsculas/minúsculas  
+      queryOptions.nombre = new RegExp(query, 'i');   
   }  
 
-  const totalProducts = await products.countDocuments(queryOptions);  
-  const totalPages = Math.ceil(totalProducts / limit);  
-  const products = await products.find(queryOptions)  
-      .sort(sort === 'desc' ? { precio: -1 } : { precio: 1 })  
-      .skip((page - 1) * limit)  
-      .limit(Number(limit));  
+  const options = {
+       page: Number(page),
+       limit: Number(limit),
+       sort: sort === 'desc' ? { precio: -1 } : { precio: 1 },  
+  };
 
-  res.json({  
+      try{
+    const result = await productModel.paginate(queryOptions, options);
+    
+    res.json({  
       status: 'success',  
-      payload: products,  
-      totalPages,  
-      prevPage: page > 1 ? page - 1 : null,  
-      nextPage: page < totalPages ? page + 1 : null,  
-      page: Number(page),  
-      hasPrevPage: page > 1,  
-      hasNextPage: page < totalPages,  
-      prevLink: page > 1 ? `/api/products?page=${page - 1}&limit=${limit}&sort=${sort}&query=${query}` : null,  
-      nextLink: page < totalPages ? `/api/products?page=${page + 1}&limit=${limit}&sort=${sort}&query=${query}` : null,  
+      payload: result.docs,  
+      totalPages: result.totalPages,
+      prevPage: result.prevPages, 
+      nextPage: result.nextPages, 
+      page: result.page,
+      hasPrevPage: result.hasPrevPage,  
+      hasNextPage: result.hasNextPage, 
+      prevLink: result.hasPrevtPage ? `/api/products?page=${result.prevPage}&limit=${limit}&sort=${sort}&query=${query}` : null,   
+      nextLink: result.hasNextPage ? `/api/products?page=${result.nextPage}&limit=${limit}&sort=${sort}&query=${query}` : null,  
   });  
+    } catch (error) {
+        res.status(500).json({status: "error", message: error.message });
+    }
 });
 
 router.get("/:pid", async (req, res) => {
