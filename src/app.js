@@ -28,6 +28,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(__dirname + "public"));
 app.use(cookieParser());
+//Error 
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Algo salió mal!');
+});
 
 app.use(session({
     secret: "secretCoder",
@@ -44,11 +49,6 @@ app.use("/", viewsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 
-//Error 
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Algo salió mal!');
-});
 const httpServer = app.listen(PUERTO, () => {
     try {
         console.log(`Escuchando en el puerto http://${HOST}:${PUERTO}`);

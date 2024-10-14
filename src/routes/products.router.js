@@ -8,12 +8,7 @@ const router = Router();
 const PM = new ProductsManager(__dirname + '/files/products.json');
 
 router.get('/products', async (req, res) => {  
-  const { limit = 5, page = 1, query = '', sort } = req.query;  
-
-  const queryOptions = {};  
-  if (query) {  
-      queryOptions.nombre = new RegExp(query, 'i');   
-  }  
+  const { limit = 10, page = 1, query = '', sort } = req.query;  
 
   const options = {
        page: Number(page),
@@ -21,6 +16,16 @@ router.get('/products', async (req, res) => {
        sort: sort === 'desc' ? { precio: -1 } : { precio: 1 },  
   };
 
+  let filter = {};
+
+  if (query) {
+    filter.category = query; // Puedes modificar esto para incluir más criterios de búsqueda  
+  }  
+
+  let sortOptions = {};  
+  if (sort) {  
+      sortOptions.price = sort === 'asc' ? 1 : -1; // 1 para ascendente, -1 para descendente  
+  }  
       try{
     const result = await productModel.paginate(queryOptions, options);
     
@@ -96,4 +101,5 @@ router.delete("/:productId", async (req, res) => {
       res.status(500).send({ status: "error", error: "Ha ocurrido un error al eliminar el producto" });  
   }  
 });
+
 export default router;

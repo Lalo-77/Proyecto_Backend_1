@@ -17,6 +17,21 @@ router.get("/", async (req, res) => {
     }
 });
 
+router.get('/carts/:cid', async (req, res) => {  
+    const cartId = req.params.cid;  
+    try {  
+        
+        const cart = await Cart.findById(cartId).populate('products');  
+        if (!cart) {  
+            return res.status(404).send('Carrito no encontrado');  
+        }  
+        res.render('cart', { products: cart.products }); // Renderiza la vista de cart  
+    } catch (error) {  
+        console.error(error);  
+        res.status(500).send('Hubo un error al obtener el carrito');  
+    }  
+});  
+
 router.get("/login", (req, res) => {
     res.render("login");
 })
