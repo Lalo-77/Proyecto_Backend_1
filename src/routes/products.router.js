@@ -19,12 +19,12 @@ router.get('/products', async (req, res) => {
   let filter = {};
 
   if (query) {
-    filter.category = query; // Puedes modificar esto para incluir más criterios de búsqueda  
+    filter.category = query;  
   }  
 
   let sortOptions = {};  
   if (sort) {  
-      sortOptions.price = sort === 'asc' ? 1 : -1; // 1 para ascendente, -1 para descendente  
+      sortOptions.price = sort === 'asc' ? 1 : -1; 
   }  
       try{
     const result = await productModel.paginate(queryOptions, options);
