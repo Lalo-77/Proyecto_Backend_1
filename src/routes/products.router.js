@@ -38,8 +38,8 @@ router.get('/products', async (req, res) => {
       page: result.page,
       hasPrevPage: result.hasPrevPage,  
       hasNextPage: result.hasNextPage, 
-      prevLink: result.hasPrevtPage ? `/api/products?page=${result.prevPage}&limit=${limit}&sort=${sort}&query=${query}` : null,   
-      nextLink: result.hasNextPage ? `/api/products?page=${result.nextPage}&limit=${limit}&sort=${sort}&query=${query}` : null,  
+      prevLink: result.hasPrevtPage ? `/api/products?limit=${limit}&page=${result.prevPage}&sort${sort || ''}&query=${query}` : null,   
+      nextLink: result.hasNextPage ? `/api/products?limit=${limit}&page=${result.nextPage}&sort${sort || ''}&query=${query}` : null,  
   });  
     } catch (error) {
         res.status(500).json({status: "error", message: error.message });
