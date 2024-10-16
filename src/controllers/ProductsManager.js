@@ -20,6 +20,7 @@ class ProductsManager {
             this.codeId = this.products.length > 0 ? Math.max(...this.products.map(p => p.id)) + 1 : 0; // Asigna nuevo ID  
         }  
     }  
+
     getProducts = async (info = {}) => {  
         try {  
             const { limit } = info; 
@@ -40,6 +41,7 @@ class ProductsManager {
             throw new Error(error);  
         }  
     };
+    
       getProductbyId = async (id) => {
         try {
           const {pid}=id

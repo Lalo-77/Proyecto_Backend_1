@@ -159,5 +159,14 @@
     "thumbnail": "alter.jpg",
     "code": "543",
     "stock": "30"
+  },
+  {
+    "title": "luces",
+    "description": "luces leds",
+    "price": "45",
+    "category": "accesorios",
+    "thumbnail": "luces.jpg",
+    "code": "34",
+    "stock": "44"
   }
 ]
