@@ -10,6 +10,8 @@ import MongoStore from "connect-mongo";
 import cookieParser from "cookie-parser";
 import socketProducts from "./listeners/socketProducts.js";
 import path from "path";
+import productModel from "./models/products.model.js";
+import mongoose from "mongoose";
 
 const app = express();
 const PUERTO = 8080;
@@ -57,6 +59,14 @@ const httpServer = app.listen(PUERTO, () => {
         console.log(error);
     }
 })
+
+const environment = async () => {
+    await mongoose.connect("mongodb+srv://crisn3682:coderhouse@cluster0.xqijc.mongodb.net/shop-cars?retryWrites=true&w=majority&appName=Cluster0");
+    let response = await productModel.find({title:"inflador_portatil"}).explain("executionsStats");
+    console.log(response);
+};
+
+environment();
 
 const socketServer = new Server(httpServer);
 

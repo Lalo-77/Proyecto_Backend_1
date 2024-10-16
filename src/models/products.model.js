@@ -5,9 +5,10 @@ const collection = "products";
 
 const productoSchema = new mongoose.Schema({  
     title: {  
-        type: String,  
+        type: String,
+        index: true,  
         required: true,  
-        unique: true 
+        unique: true
     },
     description: {
        type: String,

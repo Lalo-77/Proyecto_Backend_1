@@ -1,7 +1,7 @@
 import { Router } from "express";
 import ProductsManager from "../controllers/ProductsManager.js";
 import __dirname from "../utils.js";
-import productModel  from "../models/product.model.js";
+import productModel  from "../models/products.model.js";
 
 const router = Router();
 
