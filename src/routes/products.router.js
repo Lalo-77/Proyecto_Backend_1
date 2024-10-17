@@ -1,7 +1,7 @@
 import { Router } from "express";
 import ProductsManager from "../controllers/ProductsManager.js";
 import __dirname from "../utils.js";
-import productModel  from "../models/products.model.js";
+import productModel  from "../models/product.model.js";
 
 const router = Router();
 
@@ -33,8 +33,8 @@ router.get('/products', async (req, res) => {
       status: 'success',  
       payload: result.docs,  
       totalPages: result.totalPages,
-      prevPage: result.prevPages, 
-      nextPage: result.nextPages, 
+      prevPage: result.prevPage, 
+      nextPage: result.nextPage, 
       page: result.page,
       hasPrevPage: result.hasPrevPage,  
       hasNextPage: result.hasNextPage, 

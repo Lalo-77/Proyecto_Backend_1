@@ -1,6 +1,7 @@
 import { Router } from "express";
 import _dirname from "../utils.js";
 import ProductsManager from "../controllers/ProductsManager.js";
+import productModel from "../models/product.model.js";
 
 const PM = new ProductsManager(_dirname + "/files/products.json");  
 
@@ -21,7 +22,7 @@ router.get('/carts/:cid', async (req, res) => {
     const cartId = req.params.cid;  
     try {  
         
-        const cart = await Cart.findById(cartId).populate('products');  
+        const cart = await cart.findById(cartId).populate('products');  
         if (!cart) {  
             return res.status(404).send('Carrito no encontrado');  
         }  
@@ -47,5 +48,11 @@ router.get("/profile", (req, res)=> {
 router.get("/realTimeProducts", (req, res) => {
     res.render("realTimeProducts");
 })
+
+router.get("/products", async (req, res) =>{
+    const { page = 1 } = req.query;
+    const {  docs, hasPrevPage, prevPage, hasNextPage, nextPage, totalPages } = await productModel.paginate({}, {limit:5, page: page})
+    res.render("products", {docs, hasPrevPage, prevPage, hasNextPage, nextPage, totalPages});
+});
 
 export default router;
