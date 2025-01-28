@@ -54,7 +54,7 @@ class ProductsManager {
               throw new Error("Producto no existe");
             }
           } else {
-            throw new Error("Product file not found");
+            throw new Error("Producto no encontrado en los registros");
           }
         } catch (error) {
           throw new Error(error);

@@ -20,7 +20,7 @@ router.delete('/carts/:cid/products/:pid', async (req, res) => {
   const { cid, pid } = req.params;  
 
   try {  
-      const cart = await Cart.findById(cid);  
+      const cart = await cart.findById(cid);  
       if (!cart) return res.status(404).json({ message: 'Carrito no encontrado' });  
       
       const productIndex = cart.products.findIndex(product => product.id.toString() === pid);  
@@ -41,7 +41,7 @@ router.put('/carts/:cid', async (req, res) => {
   const products = req.body.products;  
 
   try {  
-      const cart = await Cart.findById(cid);  
+      const cart = await cart.findById(cid);  
       cart.products = products; // Actualiza o crea el carrito  
       await cart.save();  
       return res.status(200).json({ message: 'Carrito actualizado', products });  
@@ -60,7 +60,7 @@ router.put('/carts/:cid/products/:pid', async (req, res) => {
   }  
 
   try {  
-      const cart = await Cart.findById(cid);  
+      const cart = await cart.findById(cid);  
       const product = cart.products.find(product => product.id.toString() === pid);  
       if (product) {  
           product.quantity = quantity; // Actualiza la cantidad del producto  
@@ -93,7 +93,7 @@ router.delete('/carts/:cid', async (req, res) => {
   const cid = req.params.cid;  
 
   try {  
-      const cart = await Cart.findById(cid);  
+      const cart = await cart.findById(cid);  
       if (!cart) return res.status(404).json({ message: 'Carrito no encontrado' });  
       
       cart.products = []; // Elimina todos los productos del carrito  

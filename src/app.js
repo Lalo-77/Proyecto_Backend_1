@@ -12,6 +12,7 @@ import socketProducts from "./listeners/socketProducts.js";
 import path from "path";
 import productModel from "./models/product.model.js";
 import mongoose from "mongoose";
+import sessionRouter from "./routes/session.router.js";
 
 const app = express();
 const PUERTO = 8080;
@@ -50,6 +51,7 @@ app.use(session({
 app.use("/", viewsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
+app.use("api/session", sessionRouter);
 
 const httpServer = app.listen(PUERTO, () => {
     try {
