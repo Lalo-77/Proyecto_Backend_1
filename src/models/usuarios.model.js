@@ -1,9 +1,6 @@
 import mongoose from "mongoose";
 
 const usuarioSchema = new mongoose.Schema({
-    usuario: {
-        type: String,
-    },
     first_name: { 
         type: String, 
         required: true
@@ -28,7 +25,8 @@ const usuarioSchema = new mongoose.Schema({
     },
     cart: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Carts"
+        ref: "carts",
+        default: null
     },
     role: { 
         type: String,
@@ -37,6 +35,6 @@ const usuarioSchema = new mongoose.Schema({
     }
 })
 
-const UsuarioModel = mongoose.model("usuarios", usuarioSchema);
+const UsuarioModel = mongoose.model("usuario", usuarioSchema);
 
 export default UsuarioModel;

@@ -1,10 +1,8 @@
-//import UserRepository from "../repositories/User.Repository.js";
-import { userDao } from "../dao/cart.dao.js";
-import { createHash, isValidPassword } from "../herramientas/validar.js";
-
+import UserRepository from "../repositories/User.Repository.js";
+import { createHash, isValidPassword } from "../utils/validar.js";
 
 class UserService {
-    async registerUser(userData) {
+    async register(userData) {
          const existeUsuario = await UserRepository.getUserByEmail(userData.email);
          
          if(existeUsuario) throw new Error("El usuario ya existe");
@@ -13,11 +11,11 @@ class UserService {
          return await UserRepository.createUser(userData);
     }
 
-
-    async loginUser(email, password){
-        const user = await UserRepository.getUserByEmail(email);
-        if (!user || !isValidPassword(password, user)) throw new Error("Credenciales incorrectas");
-        return user;
+    
+async login(email, password){
+        const usuario = await UserRepository.getUserByEmail(email);
+        if (!usuario || !isValidPassword( usuario), password) throw new Error("Credenciales incorrectas");
+        return usuario;
     }
 }
 

@@ -1,8 +1,9 @@
 class UserDTO {
-    constructor(user) {
-        this.email = user.email;
-        this.role = user.role;
-    }
+    constructor(usuario) {
+        this.email = usuario.email;
+        this.first_name = usuario.first_name;
+        this.role = usuario.role;
+        }
     }
     
     export default UserDTO;

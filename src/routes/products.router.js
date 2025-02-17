@@ -1,7 +1,7 @@
 import { Router } from "express";
 import ProductsManager from "../controllers/ProductsManager.js";
 import __dirname from "../utils.js";
-import productModel  from "../models/product.model.js";
+import productoModel  from "../models/producto.model.js";
 
 const router = Router();
 
@@ -27,7 +27,7 @@ router.get('/products', async (req, res) => {
       sortOptions.price = sort === 'asc' ? 1 : -1; 
   }  
       try{
-    const result = await productModel.paginate(queryOptions, options);
+    const result = await productoModel.paginate(queryOptions, options);
     
     res.json({  
       status: 'success',  
