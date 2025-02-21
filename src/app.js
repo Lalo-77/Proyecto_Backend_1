@@ -15,7 +15,7 @@ import mongoose from "mongoose";
 import sessionRouter from "./routes/session.router.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
-import { initMongoDB } from "./config/db.config.js";
+import { initMongoDB } from "./config/dbConfig.js";
 import "dotenv/config";
 import "./database.js";
 
@@ -44,12 +44,17 @@ app.use((err, req, res, next) => {
     res.status(500).send('Algo salió mal!');
 });
 
-const sessionConfig = {
-    secret: process.env.SECRET_KEY,
-    resave: true,
-    saveUninitialized: true,
-    store: MongoStore.create({
-        mongoUrl: process.env.MONGO_URL,
+/*const sessionConfig = {
+    secret: "process.env.SECRET_KEY",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 60000,
+    },
+    store: new MongoStore({ //error 
+        mongoUrl: 
+            process.env.MONGO_URL,
+        ttl: 60,
     }),
 };
 
@@ -57,7 +62,7 @@ app.use(session(sessionConfig));
 
 initMongoDB()
 .then(() => console.log("Conectado a la base de datos"))
-.catch((error) => console.log(error));
+.catch((error) => console.log(error));*/
 
 //RUTAS
 

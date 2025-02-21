@@ -23,8 +23,8 @@ const usuarioSchema = new mongoose.Schema({
         type: Number, 
         required: true
     },
-    cart: {
-        type: mongoose.Schema.Types.ObjectId,
+    cartId: {
+        type: String,
         ref: "carts",
         default: null
     },

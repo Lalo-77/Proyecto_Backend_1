@@ -29,7 +29,7 @@ class UserController {
 
             await nuevoUsuario.save();
 
-            const token = jwt.sign({usuario: nuevoUsuario.usuario, email: nuevoUsuario.email, role: nuevoUsuario.role || "user" },  
+            const token = jwt.sign({usuario: nuevoUsuario.usuario, role: nuevoUsuario.role || "user" },  
                 process.env.JWT_SECRET || "coderhouse", 
                 { expiresIn: "1h" });  
 
@@ -49,9 +49,10 @@ class UserController {
     async login(req, res, next) {  
         const { email, password } = req.body;  
         try {  
-            const usuarioEsta = await UsuarioModel({email, password});  
+            const usuarioEsta = await UsuarioModel.findOne({email});  
+            
             if (!usuarioEsta) {  
-                return res.status(401).send("Credenciales incorrectas"); 
+                return res.status(401).send("Usuario no valido"); 
             }  
 
             if(!isValidPassword(password, usuarioEsta)) {
@@ -73,9 +74,9 @@ class UserController {
             console.error("Error en login:", error);
             return res.status(500).send("Error del servidor: " + error.message);  
         }  
-    }  
+    } 
 
-    async current(req, res) {  
+    async current (req, res) {  
         if (req.user) {  
             res.render("home", { usuario: req.user.usuario }); 
         } else {  

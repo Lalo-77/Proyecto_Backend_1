@@ -1,8 +1,9 @@
-<div class="container"></div>
-    <h1> BIENVENIDO !!! {{user}} a <strong> SHOP-CARS </strong></h1>
+    <h1> BIENVENIDO !!! {{usuario}} a <strong> SHOP-CARS </strong></h1>
     <h2 class="text-center">PRODUCTOS</h2>
  <form action="/api/session/logout" method="POST">
     <button type="submit">Cerrar sesion</button>
+      </form>
+    <button onclick="/api/products"> PRODUCTOS </button>
     <div class="row">
         {{#each listadeproductos}}
         <div class="col">
@@ -29,4 +30,4 @@
         {{/each}}
     </div>
 
-     </form>
+   

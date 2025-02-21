@@ -20,4 +20,4 @@ class UserDao {
        }
     }
 
-export const userDao =new UserDao(UsuarioModel);
+export const userDao = new UserDao(UsuarioModel);
