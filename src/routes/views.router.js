@@ -1,6 +1,6 @@
 import { Router } from "express";
 import _dirname from "../utils.js";
-import ProductsManager from "../controllers/ProductsManager.js";
+import ProductsManager from "../managers/ProductsManager.js";
 import productoModel from "../models/producto.model.js";
 
 const PM = new ProductsManager(_dirname + "/files/products.json");  
@@ -33,7 +33,7 @@ router.get('/carts/:cid', async (req, res) => {
     }  
 });  
 
-router.get("/", (req, res) => {
+router.get("/login", (req, res) => {
     res.render("login");
 })
 

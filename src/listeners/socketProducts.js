@@ -1,4 +1,4 @@
-import ProductsManager from "../controllers/ProductsManager.js";
+import ProductsManager from "../managers/ProductsManager.js";
 import __dirname from "../utils.js";
 
 const PM = new ProductsManager(__dirname + "/files/products.json");  

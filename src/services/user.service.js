@@ -3,22 +3,22 @@ import { createHash, isValidPassword } from "../utils/utils.js";
 
 export const register = async (user) => {
   try {
-    const { email, password } = user;
-    //const existUser = await userDao.getByEmail(email);
-    //if (existUser) throw new Error("User already exists");
-    if (email === "adminCoder@coder.com" && password === "adminCod3r123") {
-      return await userDao.register({
-        ...user,
-        password: createHash(password),
-        role: "admin",
-      });
+    const { email, password, isGitHub } = user;
+    const existeUsuario = await this.getUserByEmail(email);
+      if (existeUsuario) throw new Error("El usuario ya existe");
+      if (isGitHub) {
+      const newUser = await this.dao.register(user);
+      return newUser;
     }
-    return await userDao.register({
+    //const cart = cartService.create()
+    const newUser = await this.dao.register({
       ...user,
       password: createHash(password),
+      // cart: cart._id
     });
-  } catch (error) {
-    throw error;
+      return newUser;
+    } catch (error) {
+      throw error;
   }
 };
 
@@ -27,25 +27,25 @@ export const login = async (email, password) => {
     const userExist = await userDao.getByEmail(email);
     if (!userExist) throw new Error("User not exists");
     const passValid = isValidPassword(password, userExist);
-    if(!passValid) throw new Error("Invalid Credentials");  //401
-    return userExist
+    if (!passValid) throw new Error("Invalid Credentials"); //401
+    return userExist;
   } catch (error) {
-    throw error
+    throw error;
   }
 };
 
-export const getByEmail = async(email) => {
+export const getByEmail = async (email) => {
   try {
-    return await userDao.getByEmail(email)
+    return await userDao.getByEmail(email);
   } catch (error) {
-    throw new Error(error)
+    throw new Error(error);
   }
-}
+};
 
-export const getById = async(id) => {
+export const getById = async (id) => {
   try {
-    return await userDao.getById(id)
+    return await userDao.getById(id);
   } catch (error) {
-    throw new Error(error)
+    throw new Error(error);
   }
-}
+};

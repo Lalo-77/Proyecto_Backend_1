@@ -3,8 +3,7 @@ import { Server } from "socket.io";
 import { engine } from "express-handlebars";  
 import __dirname from "./utils.js"; 
 import viewsRouter from "./routes/views.router.js"; 
-import productsRouter from "./routes/products.router.js";
-import cartsRouter from "./routes/carts.router.js";
+import sessionRouter from "./routes/session.router.js";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import cookieParser from "cookie-parser";
@@ -12,12 +11,12 @@ import socketProducts from "./listeners/socketProducts.js";
 import path from "path";
 import productoModel from "./models/producto.model.js";
 import mongoose from "mongoose";
-import sessionRouter from "./routes/session.router.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import { initMongoDB } from "./config/dbConfig.js";
 import "dotenv/config";
 import "./database.js";
+import apiRouter from "./routes/index.js";
 
 const app = express();
 const PUERTO = 8080;
@@ -36,7 +35,7 @@ initializePassport();
 //Express-Handlebars
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
-app.set("views", path.join(__dirname, "views")); 
+app.set("views", "./src/views"); 
 
 //Error 
 app.use((err, req, res, next) => {
@@ -64,11 +63,7 @@ initMongoDB()
 .then(() => console.log("Conectado a la base de datos"))
 .catch((error) => console.log(error));*/
 
-//RUTAS
-
 app.use("/", viewsRouter);
-app.use("/api/products", productsRouter);
-app.use("/api/carts", cartsRouter);
 app.use("/api/session", sessionRouter);
 
 const httpServer = app.listen(PUERTO, () => {
