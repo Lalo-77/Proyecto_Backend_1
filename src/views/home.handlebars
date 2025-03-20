@@ -1,5 +1,10 @@
-    <h1> BIENVENIDO !!! {{user.first_name - last_name}} a <strong> SHOP-CARS </strong></h1>
-    <h2 class="text-center">PRODUCTOS</h2>
+    <div>
+        <h1><strong> BIENVENIDO !!! SHOP-CARS </strong></h1>
+        <h2>Email:{{user.email}}</h2>
+        <h2> Role: {{user.role}}</h2> 
+    </div>
+
+     <h3 class="text-center">PRODUCTOS</h3>
  <form action="/api/session/logout" method="POST">
     <button type="submit">Cerrar sesion</button>
       </form>

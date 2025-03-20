@@ -1,106 +1,68 @@
-import UsuarioModel from "../models/usuarios.model.js";
+import userService from "../services/user.service.js";
 import jwt from "jsonwebtoken";
-import { createHash, isValidPassword } from "../utils/validar.js";
+import UserDTO from "../dto/user.dto.js";
+import { isValidPassword } from "../utils/validar.js";
 
 class UserController {
   async register(req, res, next) {
-      const { first_name, last_name, email, password, age } = req.body;
+      const {first_name, last_name, email, age, password} = req.body; 
 
-    try {
-      const existeUsuario = await UsuarioModel.findOne(req.body);
+      try {
+          const nuevoUsuario = await userService.registerUser({first_name, last_name, email, age, password}); 
 
-        if (existeUsuario) {
-          return res.status(400).send("El usuario ya existe");
-        }
-        const nuevoUsuario = new UsuarioModel({
-          first_name,
-          last_name,
-          email,
-          password: createHash(password),
-          age,
-        })
+          const token = jwt.sign({
+              usuario: `${nuevoUsuario.first_name} ${nuevoUsuario.last_name}`,
+              email: nuevoUsuario.email,
+              role: nuevoUsuario.role
+          }, "coderhouse", {expiresIn: "1h"});
 
-       await nuevoUsuario.save();
-
-    const token = jwt.sign(
-        {
-          usuario: `${nuevoUsuario.first_name} ${nuevoUsuario.last_name}`,
-          email: nuevoUsuario.email,
-          role: nuevoUsuario.role,
-        },
-
-        process.env.JWT_SECRET || "codehouse",
-        { expiresIn: "1h" }
-      );
-      res.cookie("coderCookieToken", token, {
-        maxAge: 3600000,
-        httpOnly: true,
-      });
-
-      res.redirect("/api/session/current");
-    } catch (error) {
-      next(error);
-      console.error("Error en registro:", error);
-      res.status(500).send(error.message || "Error al registrar el usuario");
-    }
+          res.cookie("coderCookieToken", token, {maxAge: 3600000, httpOnly: true});
+          res.redirect("/api/session/current");
+      } catch (error) {
+          res.status(500).send("Error del server");
+      }
   }
 
-  async login(req, res, next) {
-    const { usuario, password } = req.body;
+  async login(req, res) {
+      const {email, password} = req.body; 
 
-    try {
-      const usuarioEsta = await UsuarioModel.findOne({ usuario });
+      try {
+          const user = await userService.loginUser(email, password);
+          if (!user){
+            return res.status(401).send("usuario no valido");
+          }
+          if(!isValidPassword(password, user)) {
+            return res.status(401).send("Contraseña incorrecta");
+          }
+          console.log("Usuario Encontrado", user);
+          console.log("Contraseña valida", isValidPassword(password, user));
+          
+          const token = jwt.sign({
+              usuario: `${user.first_name} ${user.last_name}`,
+              email: user.email,
+              role: user.role
+          }, "coderhouse", {expiresIn: "1h"});
 
-      if (!usuarioEsta) {
-        return res.status(401).send("Usuario no valido");
+          res.cookie("coderCookieToken", token, {maxAge: 3600000, httpOnly: true});
+          res.redirect("/api/session/current");
+      } catch (error) {
+          res.status(500).send("Error del server");
       }
-
-      if (!isValidPassword(password, usuarioEsta)) {
-        return res.status(401).send("Contraseña incorrecta");
-      }
-      console.log("Usuario encontrado:", usuarioEsta);
-      console.log("Contraseña válida:", isValidPassword(password, usuarioEsta));
-
-      const token = jwt.sign(
-        {
-          usuario: usuarioEsta.usuario,
-          email: usuarioEsta.email,
-          role: usuarioEsta.role,
-        },
-        process.env.JWT_SECRET || "codehouse",
-        { expiresIn: "1h" }
-      );
-
-      res.cookie("coderCookieToken", token, {
-        maxAge: 3600000,
-        httpOnly: true,
-      });
-      res.redirect("/api/session/current");
-    } catch (error) {
-      next(error);
-      console.error("Error en login:", error);
-      return res.status(500).send("Error del servidor: " + error.message);
-    }
   }
 
   async current(req, res) {
-    try {
-      if (req.user) {
-        res.render("home", { usuario: req.user.usuario });
-        console.log("usuario", req.user);
-        
+      if(req.user) {
+          const user = req.user; 
+          const userDTO = new UserDTO(user); 
+          res.render("home", {user: userDTO})
       } else {
-        res.status(401).send("No autorizado");
+          res.send("No autorizado");
       }
-    } catch (error) {
-      console.log("Error en current", error);
-      res.status(500).json({ message: "Error interno en el servidor" });
-    }
   }
 
-  async logout(req, res) {
-    res.clearCookie("coderCookieToken");
-    res.redirect("/login");
+  logout(req, res) {
+      res.clearCookie("coderCookieToken");
+      res.redirect("/login");
   }
 
   async admin(req, res) {

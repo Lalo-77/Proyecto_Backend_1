@@ -43,26 +43,6 @@ app.use((err, req, res, next) => {
     res.status(500).send('Algo salió mal!');
 });
 
-/*const sessionConfig = {
-    secret: "process.env.SECRET_KEY",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        maxAge: 60000,
-    },
-    store: new MongoStore({ //error 
-        mongoUrl: 
-            process.env.MONGO_URL,
-        ttl: 60,
-    }),
-};
-
-app.use(session(sessionConfig));
-
-initMongoDB()
-.then(() => console.log("Conectado a la base de datos"))
-.catch((error) => console.log(error));*/
-
 app.use("/", viewsRouter);
 app.use("/api/session", sessionRouter);
 

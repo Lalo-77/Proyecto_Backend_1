@@ -1,10 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import jwt from "passport-jwt";
-import { createHash, isValidPassword } from "../utils/validar.js";
-import { userDao } from "../dao/user.dao.js";
 import UserController from "../controllers/User.Controller.js";
-import UsuarioModel from "../models/usuarios.model.js";
 
 const router = Router();
 

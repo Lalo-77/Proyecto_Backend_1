@@ -6,5 +6,4 @@ class CartRepository {
     }
 }
 
-
 export default new CartRepository();

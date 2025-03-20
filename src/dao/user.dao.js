@@ -1,23 +1,19 @@
 import UsuarioModel  from "../models/usuarios.model.js";
 
-class UserDao {
-    constructor(model){
-        this.model = model;
-    }
-       async register(user) {
-        try {
-            return await this.model.create(user);
-        } catch (error) {
-            throw new Error(error);
+    class UserDao {
+        async findById(id) {
+            return await UsuarioModel.findById(id); 
         }
-       } 
-       async login(email, password){
-            try {
-                return await this.model.findOne({email, password})
-            } catch (error) {
-                throw new Error(error);
-            }
-       }
+    
+        async findOne(query){
+            return await UsuarioModel.findOne(query); 
+        }
+    
+        async save(userData) {
+            const user = new UsuarioModel(userData);
+            return await user.save(); 
+        }
+    
     }
 
-export const userDao = new UserDao(UsuarioModel);
+export default new UserDao();
