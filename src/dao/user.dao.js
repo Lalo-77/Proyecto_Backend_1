@@ -1,19 +1,33 @@
-import UsuarioModel  from "../models/usuarios.model.js";
+import UsuarioModel from "../models/usuarios.model.js";
 
-    class UserDao {
-        async findById(id) {
-            return await UsuarioModel.findById(id); 
-        }
-    
-        async findOne(query){
-            return await UsuarioModel.findOne(query); 
-        }
-    
-        async save(userData) {
-            const user = new UsuarioModel(userData);
-            return await user.save(); 
-        }
-    
+class UserDao {
+  constructor(model) {
+    this.model = model;
+  }
+
+  async register(user) {
+    try {
+      return await this.model.create(user);
+    } catch (error) {
+      throw new Error(error);
     }
+  }
+
+  async getByEmmail(email) {
+    try {
+      return await this.model.findOne(email);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async getById(id) {
+    try {
+      return await this.model.findById(id);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+}
 
 export default new UserDao();

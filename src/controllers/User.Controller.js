@@ -1,80 +1,78 @@
-import userService from "../services/user.service.js";
+import { userDao } from "../dao/user.dao.js";
 import jwt from "jsonwebtoken";
-import UserDTO from "../dto/user.dto.js";
-import { isValidPassword } from "../utils/validar.js";
+import { createHash, isValidPassword } from "../utils/validar.js";
 
 class UserController {
-  async register(req, res, next) {
-      const {first_name, last_name, email, age, password} = req.body; 
-
-      try {
-          const nuevoUsuario = await userService.registerUser({first_name, last_name, email, age, password}); 
-
-          const token = jwt.sign({
-              usuario: `${nuevoUsuario.first_name} ${nuevoUsuario.last_name}`,
-              email: nuevoUsuario.email,
-              role: nuevoUsuario.role
-          }, "coderhouse", {expiresIn: "1h"});
-
-          res.cookie("coderCookieToken", token, {maxAge: 3600000, httpOnly: true});
-          res.redirect("/api/session/current");
-      } catch (error) {
-          res.status(500).send("Error del server");
-      }
-  }
-
-  async login(req, res) {
-      const {email, password} = req.body; 
-
-      try {
-          const user = await userService.loginUser(email, password);
-          if (!user){
-            return res.status(401).send("usuario no valido");
-          }
-          if(!isValidPassword(password, user)) {
-            return res.status(401).send("Contraseña incorrecta");
-          }
-          console.log("Usuario Encontrado", user);
-          console.log("Contraseña valida", isValidPassword(password, user));
-          
-          const token = jwt.sign({
-              usuario: `${user.first_name} ${user.last_name}`,
-              email: user.email,
-              role: user.role
-          }, "coderhouse", {expiresIn: "1h"});
-
-          res.cookie("coderCookieToken", token, {maxAge: 3600000, httpOnly: true});
-          res.redirect("/api/session/current");
-      } catch (error) {
-          res.status(500).send("Error del server");
-      }
-  }
-
-  async current(req, res) {
-      if(req.user) {
-          const user = req.user; 
-          const userDTO = new UserDTO(user); 
-          res.render("home", {user: userDTO})
-      } else {
-          res.send("No autorizado");
-      }
-  }
-
-  logout(req, res) {
-      res.clearCookie("coderCookieToken");
-      res.redirect("/login");
-  }
-
-  async admin(req, res) {
+  static async register(req, res) {
     try {
-      if (req.user.rol !== "admin") {
-        return res.status(403).send("Acceso denegado!");
+      const { first_name, last_name, email, password, age, role } = req.body;
+      if (!first_name || !last_name || !email || !password || !age) {
+        return res.status(400).json({ error: "Faltan datos en la solicitud" });
       }
-      res.render("admin");
+
+      const userExists = await userDao.getByEmail(email);
+      if (userExists) {
+        return res.status(400).json({ error: "El usuario ya existe" });
+      }
+
+      const newUser = await userDao.register({
+        first_name,
+        last_name,
+        email,
+        password: createHash(password), // 🔹 Encriptamos la contraseña
+        age,
+        role: role || "usuario",
+      });
+
+      res.status(201).json({ message: "✅ Usuario registrado con éxito", user: newUser });
     } catch (error) {
-      console.log("Error en admin", error);
+      res.status(500).json({ error: "❌ Error en el registro", details: error.message });
     }
   }
-}  
+  
+   static async login(req, res) {
+    try {
+      const { email, password } = req.body;
+      if (!email || !password) {
+        return res.status(400).json({ error: "Faltan datos en la solicitud" });
+      }
+
+      const user = await userDao.getByEmail(email);
+      if (!user) {
+        return res.status(404).json({ error: "Usuario no encontrado" });
+      }
+
+      if (!isValidPassword(password, user.password)) {
+        return res.status(401).json({ error: "Contraseña incorrecta" });
+      }
+
+      const token = jwt.sign(
+        { id: user._id, email: user.email, role: user.role },
+        process.env.SECRET_KEY,
+        { expiresIn: "1h" }
+      );
+
+      res.json({ message: "✅ Login exitoso", token });
+    } catch (error) {
+      res.status(500).json({ error: "❌ Error en el login", details: error.message });
+    }
+   }
+
+   static async current(req, res) {
+      res.json({ user: req.user });
+   }
+
+   static async logout(req, res) {
+    req.logout();
+    res.json({ message: "✅ Logout exitoso" });
+   }
+
+   static async admin(req, res) {
+    if(req.user.role === "admin") {
+      return res.status(403).json({ error: "Acceso denegado" });
+    }
+    res.json({ message: "Bienvenido Admin" });
+   }
+}
 
 export default new UserController();

@@ -1,77 +1,70 @@
-import CartRepository from "../repositories/cart.repository.js";
+import Ticket from "../models/tickets.model.js";
+import CartModel from "../models/carts.model.js";
+import ProductoModel from "../models/producto.model.js";
+import { v4 as uuidv4 } from "uuid";
 
 class CartService {
-    async crearCarrito() {
+    async purchaseCart(cartId, purchaserEmail) {
         try {
-            return await CartRepository.crearCarrito();
-        } catch (error) {
-            console.error('Error al crear el carrito:', error);
-            throw new Error('No se pudo crear el carrito');
-        }
-    }
-
-    async getCarritoById(cartId) {
-        if (!cartId) {
-            throw new Error('El ID del carrito es requerido');
-        }
-        try {
-            const carrito = await CartRepository.getCarritoById(cartId);
-            if (!carrito) {
-                throw new Error('Carrito no encontrado');
+            const cart = await CartModel.findById(cartId).populate("products.product");
+            if (!cart) {
+                throw new Error("Carrito no encontrado");
             }
-            return carrito;
-        } catch (error) {
-            console.error(`Error al obtener el carrito ${cartId}:`, error);
-            throw error;
-        }
-    }
 
-    async obtenerCarritos() {
-        try {
-            return await CartRepository.obtenerCarritos();
-        } catch (error) {
-            console.error('Error al obtener los carritos:', error);
-            throw new Error('No se pudieron obtener los carritos');
-        }
-    }
+            let productsWiththoutStock = [];
+            let productsToBuy = [];
+            for (let item of cart.products) {
+                const product = item.product;
+                if(product.stock >= item.quantity) {
+                    product.stock -= item.quantity;
+                    await product.save();
+                    productsToBuy.push(item);
+                } else {
+                    productsWiththoutStock.push({
+                        productId: product._id,
+                        title: product.title,
+                        stockDisponible: product.stock,
+                        quantityRequested: item.quantity
+                    });
+                }
+            }
+            
+            if (productsToBuy.length === 0) {
+                return {
+                    success:false,
+                    message: "No hay stock suficiente para ninguno de los productos",
+                    missingProducts: productsWiththoutStock
+                };
+            }
 
-    async agregarProductoAlCarrito(cartId, productId, quantity) {
-        if (!cartId || !productId) {
-            throw new Error('El ID del carrito y el ID del producto son requeridos');
-        }
-        if (quantity <= 0) {
-            throw new Error('La cantidad debe ser mayor que cero');
-        }
-        try {
-            return await CartRepository.agregarProductoAlCarrito(cartId, productId, quantity);
-        } catch (error) {
-            console.error(`Error al agregar producto ${productId} al carrito ${cartId}:`, error);
-            throw new Error('No se pudo agregar el producto al carrito');
-        }
-    }
+            const totalAmount = productsToBuy.reduce(
+                (total, item) = total + item.product.price * item.quantity,
+                0
+            );
 
-    async eliminarProductoDelCarrito(cartId, productId) {
-        if (!cartId || !productId) {
-            throw new Error('El ID del carrito y el ID del producto son requeridos');
-        }
-        try {
-            return await CartRepository.eliminarProductoDelCarrito(cartId, productId);
-        } catch (error) {
-            console.error(`Error al eliminar producto ${productId} del carrito ${cartId}:`, error);
-            throw new Error('No se pudo eliminar el producto del carrito');
-        }
-    }
+            const ticket = new Ticket({
+                code: uuidv4(),
+                amount: totalAmount,
+                purchaser: purchaserEmail
+            });
 
-    async eliminarTodosLosProductos(cartId) {
-        if (!cartId) {
-            throw new Error('El ID del carrito es requerido');
-        }
-        try {
-            return await CartRepository.eliminarTodosLosProductos(cartId);
+            await ticket.save();
+
+            cart.products = cart.products.filter(
+                item => !productsToBuy.includes(item)
+            );
+            await cart.save();
+
+            return { 
+                success: true,
+                message: "Compra realizada con exito",
+                ticket,
+                missingProducts: productsWiththoutStock.length > 0 ? productsWiththoutStock : null
+            };
         } catch (error) {
-            console.error(`Error al eliminar todos los productos del carrito ${cartId}:`, error);
-            throw new Error('No se pudieron eliminar todos los productos del carrito');
-        }
+            console.log("Error en la compra", error);
+            throw Error(error.message);
+        } 
     }
 }
 
