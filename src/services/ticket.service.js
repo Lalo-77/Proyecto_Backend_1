@@ -1,40 +1,22 @@
-import TicketRepository from "../repositories/ticket.respository.js";
-import CartRepository from "../repositories/cart.repository.js";
-import ProductRepository from "../repositories/product.repository.js";
-import UserRepository from "../repositories/User.repository.js";
-import { calcularTotal } from "../utils/utils.js";
+import Ticket from "../models/tickets.model.js";
+import { v4 as uuidv4 } from "uuid";
 
 class TicketService {
-    async purchaseCart(cartId) {
-        const cart = await CartRepository.getCartById(cartId);
-        const productosNoDisponibles = [];
-        
+  async createTicket(amount, purchaser) {
+    try {
+      const ticket = new Ticket({
+        code: uuidv4(),
+        amount,
+        purchaser,
+      });
 
-        for (const item of cart.products) {
-            const product = await ProductRepository.getProductById(item.product);
-            if (product.stock >= item.quantity) {
-                product.stock -= item.quantity;
-                await ProductRepository.updateProduct(product._id, { stock: product.stock });
-                calcularTotal;
-            } else {
-                productosNoDisponibles.push(item.product);
-            }
-        }
-
-        const user = await UserRepository.getUserById(cartId);
-
-        const ticketData = {
-            amount: calcularTotal,
-            purchaser: user.email
-        };
-
-        const ticket = await TicketRepository.createTicket(ticketData);
-
-        cart.products = cart.products.filter(item => !productosNoDisponibles.includes(item.product));
-        await CartRepository.updateCarrito(cart._id, cart);
-
-        return { ticket, productosNoDisponibles };
+      await ticket.save();
+      return { success: true, ticket };
+    } catch (error) {
+      console.error("Error creado ticket:", error);
+      return { success: false, error };
     }
+  }
 }
 
 export default new TicketService();

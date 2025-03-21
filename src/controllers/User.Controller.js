@@ -30,7 +30,7 @@ class UserController {
     }
   }
   
-   static async login(req, res) {
+  static async login(req, res) {
     try {
       const { email, password } = req.body;
       if (!email || !password) {
@@ -56,16 +56,16 @@ class UserController {
     } catch (error) {
       res.status(500).json({ error: "❌ Error en el login", details: error.message });
     }
-   }
+  }
 
-   static async current(req, res) {
-      res.json({ user: req.user });
-   }
+  static async current(req, res) {
+    res.json({ user: req.user });
+  }
 
-   static async logout(req, res) {
+  static async logout(req, res) {
     req.logout();
     res.json({ message: "✅ Logout exitoso" });
-   }
+  }
 
    static async admin(req, res) {
     if(req.user.role === "admin") {
@@ -75,4 +75,4 @@ class UserController {
    }
 }
 
-export default new UserController();
+export default UserController;

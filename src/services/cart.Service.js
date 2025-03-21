@@ -13,6 +13,7 @@ class CartService {
 
             let productsWiththoutStock = [];
             let productsToBuy = [];
+
             for (let item of cart.products) {
                 const product = item.product;
                 if(product.stock >= item.quantity) {
@@ -38,7 +39,7 @@ class CartService {
             }
 
             const totalAmount = productsToBuy.reduce(
-                (total, item) = total + item.product.price * item.quantity,
+                (total, item) => total + item.product.price * item.quantity,
                 0
             );
 

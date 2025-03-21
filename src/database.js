@@ -1,5 +1,27 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 
-mongoose.connect("mongodb+srv://crisn3682:coderhouse@cluster0.xqijc.mongodb.net/shop-cars?retryWrites=true&w=majority&appName=Cluster0") 
-.then(() => console.log("Conexion exitosa!"))
-.catch((error) => console.log("Error de conexion a la base de datos:", error)); 
+dotenv.config(); 
+
+const connectDB = async () => {
+   const mongoURI = process.env.MONGO_URL;
+  
+   if (!mongoURI) {
+     console.error("❌ Error: `MONGO_URL` no está definido en el archivo `.env`.");
+     process.exit(1);
+   }
+
+  try {
+    await mongoose.connect(mongoURI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
+
+    console.log("✅ Conectado a MongoDB");
+  } catch (error) {
+    console.error("❌ Error al conectar a MongoDB:", error);
+    process.exit(1);
+  }
+};
+
+export default connectDB;

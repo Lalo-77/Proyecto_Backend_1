@@ -1,6 +1,6 @@
 import { Router } from "express";
 import productoModel from "../models/producto.model.js";
-import { authRole } from "../middleware/auth.js";
+import { authRole } from "../middleware/auth.middleware.js";
 import passport from "passport";
 import __dirname from "../utils.js";
 

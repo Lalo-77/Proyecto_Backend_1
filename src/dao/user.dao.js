@@ -13,7 +13,7 @@ class UserDao {
     }
   }
 
-  async getByEmmail(email) {
+  async getByEmail(email) {
     try {
       return await this.model.findOne(email);
     } catch (error) {
@@ -30,4 +30,4 @@ class UserDao {
   }
 }
 
-export default new UserDao();
+export const userDao= new UserDao(UsuarioModel);

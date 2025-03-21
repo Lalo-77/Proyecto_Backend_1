@@ -17,13 +17,19 @@ import mongoose from "mongoose";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import { initMongoDB } from "./config/dbConfig.js";
-import nodemailer from "nodemailer";
 import "dotenv/config";
-import "./database.js";
+//import "./database.js";
+import apiRouter from "./routes/index.js";
+import smsRouter from "./routes/sms.router.js";
+import ticketRouter from "./routes/ticket.router.js";
+import mailRouter from "./routes/mail.router.js";
+import connectDB from "./database.js";
 
 const app = express();
 const PUERTO = 8080;
 const HOST = "localhost";
+
+connectDB();
 
 app.use(express.static(__dirname + "/public"));
 
@@ -32,8 +38,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "public"));
 app.use(cookieParser());
-app.use(passport.initialize());
-initializePassport();
+//app.use(passport.initialize());
+//initializePassport();
 
 //Express-Handlebars
 app.engine("handlebars", engine());
@@ -47,42 +53,13 @@ app.use((err, req, res, next) => {
 });
 
 app.use("/", viewsRouter);
-app.use("api/products", productsRouter);
-app.use("api/carts", cartsRouter);
 app.use("/api/session", sessionRouter);
-app.use("/api/session/auth", authRouter);
+app.use("api", apiRouter);
+app.use("/sms", smsRouter);
+app.use("/tickets", ticketRouter);
+app.use("/mail", mailRouter);
+app.use("api/carts", cartsRouter);
 
-
-const transport = nodemailer.createTransport({
-    service: "gmail",
-    port: 587,
-    auth:{
-        user: "crisn3682@gmail.com",
-        pass: "sxyz jlca jywe tqcr"
-    }
-})
-
-app.get("/mail", async (req, res)=> {
-    try {
-        await  transport.sendMail({
-            from: "crisn3682@gmail.com",
-            to: "cristianne97@gmail.com",
-            subject: " Testeamos Nodemailer",
-            html: `<h1>hOLA !!!</h1>
-            <img src="cid:cotorrita1">`,
-            attachments:[
-                {
-                    filename: "cotorrita.jpg",
-                    path: "./src/public/img/cotorrita.jpg",
-                    cid: "cotorrita1"
-                }
-            ] 
-        })
-        res.send("Correo enviado correctamente");
-    } catch (error) {
-        res.status(500).send("Error al enviar el mail");
-    }
-})
 const httpServer = app.listen(PUERTO, () => {
     try {
         console.log(`Escuchando en el puerto http://${HOST}:${PUERTO}`);
@@ -97,5 +74,6 @@ const environment = async () => {
     console.log(products);
 };
 environment();
+
 const socketServer = new Server(httpServer);
 socketProducts(socketServer);
