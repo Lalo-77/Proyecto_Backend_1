@@ -1,81 +1,50 @@
+import CartModel from "../models/cart.model.js";
+
 class CartController {
-    async purchaseCart(req, res) {
-        const cartId = req.params.cid;
+    async crearCarrito() {
         try {
-            const result = await TicketService.purchaseCart(cartId);
-            res.json({
-                message: "Compra realizada con éxito",
-                ticket: result.ticket,
-                productosNoDisponibles: result.productosNoDisponibles
-            });
+            const nuevoCarrito = new CartModel({ products: [] });
+            await nuevoCarrito.save();
+            return nuevoCarrito;
         } catch (error) {
-            res.status(500).json({ error: "Error al procesar la compra: " + error.message });
+            console.log("Error al crear el nuevo carrito de compras");
         }
     }
 
-    async crearCarrito(req, res) {
+    async getCarritoById(cartId) {
         try {
-            const carrito = await CartService.crearCarrito();
-            res.status(201).json(carrito);
-        } catch (error) {
-            res.status(500).json({ error: 'Error al crear el carrito' });
-        }
-    }
-
-    async getCarritoById(req, res) {
-        try {
-            const carrito = await CartService.getCarritoById(req.params.cartId);
+            const carrito = await CartModel.findById(cartId);
             if (!carrito) {
-                return res.status(404).json({ error: 'Carrito no encontrado' });
+                console.log("No existe ese carrito con el id");
+                return null;
             }
-            res.status(200).json(carrito);
+
+            return carrito;
         } catch (error) {
-            res.status(500).json({ error: 'Error interno del servidor al obtener el carrito' });
+            console.log("Error al traer el carrito", error);
         }
     }
 
-    async agregarProductoAlCarrito(req, res) {
-        const { cartId, productId } = req.params;
-        const { quantity } = req.body;
+    async agregarProductoAlCarrito(cartId, productId, quantity = 1) {
         try {
-            const carrito = await CartService.agregarProductoAlCarrito(cartId, productId, quantity);
-            res.status(200).json(carrito);
-        } catch (error) {
-            res.status(500).json({ error: 'Error al agregar el producto al carrito' });
-        }
-    }
+            const carrito = await this.getCarritoById(cartId);
+            const existeProducto = carrito.products.find(item => item.product.toString() === productId);
 
-    async eliminarProductoDelCarrito(req, res) {
-        const { cartId, productId } = req.params;
-        try {
-            const carrito = await CartService.eliminarProductoDelCarrito(cartId, productId);
-            res.status(200).json(carrito);
-        } catch (error) {
-            res.status(500).json({ error: 'Error al eliminar el producto del carrito' });
-        }
-    }
+            if (existeProducto) {
+                existeProducto.quantity += quantity;
+            } else {
+                carrito.products.push({ product: productId, quantity });
+            }
 
-    async eliminarTodosLosProductos(req, res) {
-        const { cartId } = req.params;
-        try {
-            const carrito = await CartService.eliminarTodosLosProductos(cartId);
-            res.status(200).json(carrito);
-        } catch (error) {
-            res.status(500).json({ error: 'Error al eliminar todos los productos del carrito' });
-        }
-    }
+            carrito.markModified("products");
 
-    async viewCarrito(req, res) { 
-        try {
-            const carrito = await CartService.getCarritoById(req.params.cartId);
-            res.render('cart', { 
-                products: carrito.products,
-                cartId: carrito.id
-            });
+            await carrito.save();
+            return carrito;
+
         } catch (error) {
-            res.status(500).render('error', { message: 'Error al cargar el carrito' });
+            console.log("error al agregar un producto", error);
         }
     }
 }
 
-export default new CartController();
+export default CartController;

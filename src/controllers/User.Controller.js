@@ -19,7 +19,7 @@ class UserController {
         first_name,
         last_name,
         email,
-        password: createHash(password), // 🔹 Encriptamos la contraseña
+        password: createHash(password), 
         age,
         role: role || "usuario",
       });
@@ -29,7 +29,7 @@ class UserController {
       res.status(500).json({ error: "❌ Error en el registro", details: error.message });
     }
   }
-  
+
   static async login(req, res) {
     try {
       const { email, password } = req.body;
@@ -63,16 +63,15 @@ class UserController {
   }
 
   static async logout(req, res) {
-    req.logout();
-    res.json({ message: "✅ Logout exitoso" });
+    res.json({ message: "Logout exitoso (token del cliente eliminado!!!!!!)" });
   }
-
-   static async admin(req, res) {
-    if(req.user.role === "admin") {
+  
+  static async admin(req, res) {
+    if (req.user.role !== "admin") {
       return res.status(403).json({ error: "Acceso denegado" });
     }
     res.json({ message: "Bienvenido Admin" });
-   }
+  }
 }
 
 export default UserController;

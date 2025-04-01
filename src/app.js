@@ -4,9 +4,6 @@ import { engine } from "express-handlebars";
 import __dirname from "./utils.js"; 
 import viewsRouter from "./routes/views.router.js"; 
 import sessionRouter from "./routes/session.router.js";
-import productsRouter from "./routes/products.router.js";
-import cartsRouter from "./routes/carts.router.js";
-import authRouter from "./routes/auth.router.js";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import cookieParser from "cookie-parser";
@@ -18,11 +15,13 @@ import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import { initMongoDB } from "./config/dbConfig.js";
 import "dotenv/config";
-//import "./database.js";
-import apiRouter from "./routes/index.js";
+import "./database.js";
+
+import productsRouter from "./routes/products.router.js";
 import smsRouter from "./routes/sms.router.js";
 import ticketRouter from "./routes/ticket.router.js";
 import mailRouter from "./routes/mail.router.js";
+import cartsRouter from "./routes/carts.router.js"
 import connectDB from "./database.js";
 
 const app = express();
@@ -38,8 +37,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "public"));
 app.use(cookieParser());
-//app.use(passport.initialize());
-//initializePassport();
+
+initializePassport();
+app.use(passport.initialize());
 
 //Express-Handlebars
 app.engine("handlebars", engine());
@@ -54,7 +54,7 @@ app.use((err, req, res, next) => {
 
 app.use("/", viewsRouter);
 app.use("/api/session", sessionRouter);
-app.use("api", apiRouter);
+app.use("api/products", productsRouter);
 app.use("/sms", smsRouter);
 app.use("/tickets", ticketRouter);
 app.use("/mail", mailRouter);
@@ -68,12 +68,6 @@ const httpServer = app.listen(PUERTO, () => {
         console.log(error);
     }
 })
-const environment = async () => {
-    await mongoose.connect("mongodb+srv://crisn3682:coderhouse@cluster0.xqijc.mongodb.net/shop-cars?retryWrites=true&w=majority&appName=Cluster0");
-    let products = await productoModel.paginate({category:"decoracion"}, {limit: 4, page:2});
-    console.log(products);
-};
-environment();
 
 const socketServer = new Server(httpServer);
 socketProducts(socketServer);

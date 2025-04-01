@@ -57,9 +57,8 @@ router.get("/:pid", async (req, res) => {
   }
 });
 
-router.post(
-  "/",
-  passport.authenticate("jwt", { session: false }),
+router.post("/", 
+  passport.authenticate("jwt", { session: false }), 
   authRole(["admin"]),
   async (req, res) => {
     try {
@@ -76,16 +75,11 @@ router.post(
 
 router.put("/:productId", authRole(["admin"]), async (req, res) => {
   try {
-    const updatedProduct = await productoModel.findByIdUpdate(
-      req.params.productId,
-      req.body,
-      { new: true }
+    const updatedProduct = await productoModel.findByIdUpdate(req.params.productId, req.body, { new: true }
     );
     res.json({ message: "✅ Producto actualizado", updatedProduct });
   } catch (error) {
-    res
-      .status(400)
-      .send({ message: "❌ Error al actualizar el producto", error });
+    res.status(400).send({ message: "❌ Error al actualizar el producto", error });
   }
 });
 
@@ -94,9 +88,7 @@ router.delete("/:productId", authRole(["admin"]), async (req, res) => {
     await productoModel.findByIdAndDelete(req.params.productId);
     res.json({ message: "✅ Producto eliminado con éxito" });
   } catch (error) {
-    res
-      .status(400)
-      .json({ message: "❌ Error al eliminar el producto", error });
+    res.status(400).json({ message: "❌ Error al eliminar el producto", error });
   }
 });
 

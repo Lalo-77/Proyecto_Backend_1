@@ -1,17 +1,14 @@
 import { Router } from "express";
 import _dirname from "../utils.js";
-import CartController from "../controllers/cart.controller.js";
-import ViewsController from "../controllers/views.controller.js";
-import jwt from "jsonwebtoken";
-import config from "../config/config.js";
 import ProductsManager from "../managers/ProductsManager.js";
+import productoModel from "../models/producto.model.js";
 
-const PM = new ProductsManager(_dirname + "/database/products.json");
+const PM = new ProductsManager(_dirname + "/files/products.json");
 
 
 const router = Router();
 
-router.get("/home", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const listadeproductos = await PM.getProducts();
 

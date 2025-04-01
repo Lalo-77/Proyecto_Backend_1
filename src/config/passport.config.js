@@ -6,7 +6,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const initializePassport = () => {
-
     const cookieExtractor = (req) => {
         let token = null;
         if(req && req.cookies) {
@@ -19,7 +18,11 @@ const initializePassport = () => {
         jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor, ExtractJwt.fromAuthHeaderAsBearerToken()]),
         secretOrkey: process.env.SECRET_KEY || "default_secet", 
     };
-
+    const opts = {
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        secretOrkey: process.env.SECRET_KEY,
+    };
+    
     passport.use(
         new JWTStrategy( options, async(jwt_payload, done) => {
             try {

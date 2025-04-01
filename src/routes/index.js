@@ -5,8 +5,8 @@ import sessionRouter from "./session.router.js";
 
 const router = Router();
 
-router.use("/api/products", productsRouter);
-router.use("/api/carts", cartsRouter);
-router.use("/api/session", sessionRouter);
+router.use("/products", productsRouter);
+router.use("/carts", cartsRouter);
+router.use("/session", sessionRouter);
 
 export default router;
